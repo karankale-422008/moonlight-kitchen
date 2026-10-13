@@ -3,7 +3,8 @@ import { Header } from './components/common/Header';
 import { Footer } from './components/common/Footer';
 import { HeroBanner } from './components/common/HeroBanner';
 import { MobileBottomBar } from './components/common/MobileBottomBar';
-import { MenuCategoryNav } from './components/menu/MenuCategoryNav';
+import { CategoryVisualShowcase } from './components/menu/CategoryVisualShowcase';
+import { StickyCategoryNav } from './components/menu/StickyCategoryNav';
 import { SearchAndFilters } from './components/menu/SearchAndFilters';
 import { FoodCard } from './components/menu/FoodCard';
 import { FoodDetailModal } from './components/menu/FoodDetailModal';
@@ -29,11 +30,10 @@ import { Utensils } from 'lucide-react';
 const MainApp: React.FC = () => {
   const { isCartOpen, setIsCartOpen } = useCart();
 
-  // Menu items loaded from storage / database
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [isLoadingMenu, setIsLoadingMenu] = useState(true);
 
-  // Filter & Search states
+  // Filters & Search
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [dietaryFilter, setDietaryFilter] = useState<DietaryType | 'all'>('all');
@@ -45,9 +45,8 @@ const MainApp: React.FC = () => {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
 
-  const menuSectionRef = useRef<HTMLDivElement>(null);
+  const menuContainerRef = useRef<HTMLDivElement>(null);
 
-  // Load menu items
   const loadMenu = async () => {
     setIsLoadingMenu(true);
     try {
@@ -78,7 +77,7 @@ const MainApp: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Category counts based on total menu
+  // Category counts
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {};
     menuItems.forEach(item => {
@@ -90,12 +89,10 @@ const MainApp: React.FC = () => {
   // Filter and sort items
   const filteredItems = useMemo(() => {
     return menuItems.filter(item => {
-      // 1. Category filter
       if (activeCategory !== 'all' && item.category !== activeCategory) {
         return false;
       }
 
-      // 2. Search query filter
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim();
         const matchesName = item.name.toLowerCase().includes(q);
@@ -107,12 +104,10 @@ const MainApp: React.FC = () => {
         }
       }
 
-      // 3. Dietary filter
       if (dietaryFilter !== 'all' && item.dietary !== dietaryFilter) {
         return false;
       }
 
-      // 4. Bestseller filter
       if (onlyBestsellers && !item.isBestseller) {
         return false;
       }
@@ -122,12 +117,27 @@ const MainApp: React.FC = () => {
       if (sortBy === 'price-asc') return a.basePrice - b.basePrice;
       if (sortBy === 'price-desc') return b.basePrice - a.basePrice;
       if (sortBy === 'name') return a.name.localeCompare(b.name);
-      // 'popular': bestsellers first
       if (a.isBestseller && !b.isBestseller) return -1;
       if (!a.isBestseller && b.isBestseller) return 1;
       return 0;
     });
   }, [menuItems, activeCategory, searchQuery, dietaryFilter, onlyBestsellers, sortBy]);
+
+  // Top-down smooth scroll to category section
+  const handleScrollToCategory = (categoryId: string) => {
+    setActiveCategory(categoryId);
+    if (categoryId === 'all') {
+      window.scrollTo({ top: 400, behavior: 'smooth' });
+      return;
+    }
+
+    const sectionEl = document.getElementById(`category-section-${categoryId}`);
+    if (sectionEl) {
+      const yOffset = -140; // account for sticky header & sticky category bar
+      const y = sectionEl.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
 
   const handleResetFilters = () => {
     setActiveCategory('all');
@@ -144,105 +154,111 @@ const MainApp: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-orange-500 selection:text-slate-950">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-orange-500 selection:text-white">
       {/* Top Header */}
       <Header
         onOpenSearch={handleFocusSearch}
         onOpenAdmin={() => setIsAdminOpen(true)}
       />
 
-      {/* Sticky Menu Category Bar */}
-      <MenuCategoryNav
+      {/* Sticky Top-Down Category Navigator Bar */}
+      <StickyCategoryNav
         activeCategory={activeCategory}
-        onSelectCategory={catId => {
-          setActiveCategory(catId);
-          if (menuSectionRef.current) {
-            menuSectionRef.current.scrollIntoView({ behavior: 'smooth' });
-          }
-        }}
+        onSelectCategory={handleScrollToCategory}
         categoryCounts={categoryCounts}
       />
 
-      {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-28 lg:pb-12">
+      {/* Main Container */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-28 lg:pb-12" ref={menuContainerRef}>
         <div className="flex gap-8 items-start">
-          {/* Main Discovery Column */}
-          <div className="flex-1 min-w-0" ref={menuSectionRef}>
-            {/* Hero Branding Banner */}
+          {/* Main Content Column */}
+          <div className="flex-1 min-w-0">
+            {/* Restaurant Hero Card */}
             <HeroBanner
               onExploreClick={() => {
-                if (menuSectionRef.current) {
-                  menuSectionRef.current.scrollIntoView({ behavior: 'smooth' });
-                }
+                const el = document.getElementById('discovery-section');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
               }}
             />
 
-            {/* Search and Filters Bar */}
-            <SearchAndFilters
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              dietaryFilter={dietaryFilter}
-              onDietaryChange={setDietaryFilter}
-              onlyBestsellers={onlyBestsellers}
-              onToggleBestsellers={() => setOnlyBestsellers(prev => !prev)}
-              sortBy={sortBy}
-              onSortChange={setSortBy}
-              totalFilteredCount={filteredItems.length}
-              onResetFilters={handleResetFilters}
+            {/* Top Category Visual Showcase ("What's on your mind?") */}
+            <CategoryVisualShowcase
+              onCategoryClick={handleScrollToCategory}
+              categoryCounts={categoryCounts}
             />
 
-            {/* Food Grid / Category Sections */}
+            {/* Search, Dietary Filters & Sort */}
+            <div id="discovery-section">
+              <SearchAndFilters
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                dietaryFilter={dietaryFilter}
+                onDietaryChange={setDietaryFilter}
+                onlyBestsellers={onlyBestsellers}
+                onToggleBestsellers={() => setOnlyBestsellers(prev => !prev)}
+                sortBy={sortBy}
+                onSortChange={setSortBy}
+                totalFilteredCount={filteredItems.length}
+                onResetFilters={handleResetFilters}
+              />
+            </div>
+
+            {/* Food Grid / Top-Down Grouped Category Sections */}
             {isLoadingMenu ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {Array.from({ length: 6 }).map((_, i) => (
                   <div
                     key={i}
-                    className="h-72 rounded-2xl bg-slate-900 border border-slate-800 animate-pulse"
+                    className="h-44 rounded-2xl bg-white border border-slate-200 animate-pulse"
                   />
                 ))}
               </div>
             ) : filteredItems.length === 0 ? (
-              <div className="p-16 rounded-3xl bg-slate-900/60 border border-slate-800 text-center space-y-3">
-                <div className="w-16 h-16 mx-auto rounded-3xl bg-slate-800 flex items-center justify-center text-slate-500">
+              <div className="p-16 rounded-3xl bg-white border border-slate-200 text-center space-y-3 shadow-2xs">
+                <div className="w-16 h-16 mx-auto rounded-3xl bg-slate-100 flex items-center justify-center text-slate-400">
                   <Utensils className="w-8 h-8" />
                 </div>
-                <h3 className="text-lg font-bold text-white">No items found</h3>
-                <p className="text-xs text-slate-400 max-w-sm mx-auto">
-                  No food matches your current search or dietary filter. Try resetting your filters to explore our full menu.
+                <h3 className="text-base font-bold text-slate-900">No dishes match your filter</h3>
+                <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                  Try clearing your search query or dietary filters to browse the entire menu.
                 </p>
                 <button
                   onClick={handleResetFilters}
-                  className="px-5 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-400 text-slate-950 font-bold text-xs uppercase tracking-wider transition-colors shadow-md"
+                  className="px-5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-xs"
                 >
                   Reset All Filters
                 </button>
               </div>
             ) : activeCategory === 'all' && !searchQuery ? (
-              // Grouped Category View when viewing All items
-              <div className="space-y-12">
+              // Top-Down Flow: Dedicated Category Sections with anchors
+              <div className="space-y-10">
                 {MENU_CATEGORIES.filter(c => c.id !== 'all').map(cat => {
                   const catItems = filteredItems.filter(i => i.category === cat.id);
                   if (catItems.length === 0) return null;
 
                   return (
-                    <section key={cat.id} id={cat.id} className="space-y-4">
-                      <div className="flex items-center justify-between pb-2 border-b border-slate-800/80">
+                    <section
+                      key={cat.id}
+                      id={`category-section-${cat.id}`}
+                      className="space-y-4 pt-4 border-t first:border-t-0 border-slate-200/80"
+                    >
+                      <div className="flex items-center justify-between">
                         <div>
-                          <h2 className="text-xl sm:text-2xl font-black text-white font-serif tracking-tight">
+                          <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight font-serif">
                             {cat.name}
                           </h2>
                           {cat.description && (
-                            <p className="text-xs text-slate-400 mt-0.5">
+                            <p className="text-xs text-slate-500 mt-0.5">
                               {cat.description}
                             </p>
                           )}
                         </div>
-                        <span className="text-xs font-bold text-slate-500">
+                        <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2.5 py-1 rounded-full">
                           {catItems.length} {catItems.length === 1 ? 'item' : 'items'}
                         </span>
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {catItems.map(item => (
                           <FoodCard
                             key={item.id}
@@ -256,8 +272,8 @@ const MainApp: React.FC = () => {
                 })}
               </div>
             ) : (
-              // Flat Filtered Grid
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              // Filtered / Search Results View
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {filteredItems.map(item => (
                   <FoodCard
                     key={item.id}
@@ -269,7 +285,7 @@ const MainApp: React.FC = () => {
             )}
           </div>
 
-          {/* Persistent Desktop Basket Side Panel (Visible on xl screens >= 1280px) */}
+          {/* Persistent Desktop Basket Side Panel (Visible on screens >= 1280px) */}
           <div className="hidden xl:block shrink-0">
             <DesktopCartPanel onOpenCheckout={() => setIsCheckoutOpen(true)} />
           </div>

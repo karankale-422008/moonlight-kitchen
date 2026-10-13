@@ -5,14 +5,12 @@ import {
   MapPin, 
   Plus, 
   Trash2, 
-  Check, 
   ShieldCheck, 
   LogOut, 
   Home, 
   Briefcase 
 } from 'lucide-react';
 import { useCustomer } from '../../context/CustomerContext';
-import { CustomerAddress } from '../../types/customer';
 
 export const ProfileModal: React.FC = () => {
   const { 
@@ -35,8 +33,8 @@ export const ProfileModal: React.FC = () => {
   const [houseNo, setHouseNo] = useState('');
   const [street, setStreet] = useState('');
   const [area, setArea] = useState('');
-  const [city, setCity] = useState('Delivery City');
-  const [pincode, setPincode] = useState('400001');
+  const city = 'Delivery City';
+  const pincode = '400001';
   const [landmark, setLandmark] = useState('');
   const [isDefault, setIsDefault] = useState(false);
 
@@ -71,25 +69,25 @@ export const ProfileModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm overflow-y-auto animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto animate-in fade-in duration-200">
       <div
-        className="relative w-full max-w-xl bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden my-8 animate-in zoom-in-95 duration-200"
+        className="relative w-full max-w-xl bg-white border border-slate-200 rounded-3xl shadow-2xl overflow-hidden my-8 animate-in zoom-in-95 duration-200"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
+        <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-orange-500/20 text-orange-400 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center">
               <User className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-black text-white">Customer Account</h2>
-              <p className="text-xs text-slate-400">Personal details and delivery address book</p>
+              <h2 className="text-lg font-black text-slate-900">My Account &amp; Addresses</h2>
+              <p className="text-xs text-slate-500">Manage delivery locations and profile details</p>
             </div>
           </div>
           <button
             onClick={() => setIsProfileModalOpen(false)}
-            className="p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white transition-colors"
+            className="p-2 rounded-xl text-slate-400 hover:text-slate-800 hover:bg-slate-200 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -100,29 +98,29 @@ export const ProfileModal: React.FC = () => {
           {/* Personal Info Form */}
           <form onSubmit={handleUpdateProfile} className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+              <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                 Personal Information
               </h3>
-              <span className="flex items-center gap-1 text-[11px] text-emerald-400 font-medium">
+              <span className="flex items-center gap-1 text-[11px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
                 <ShieldCheck className="w-3.5 h-3.5" />
-                Verified Phone: +91 {profile.phone}
+                Phone: +91 {profile.phone}
               </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-slate-400 mb-1">
+                <label className="block text-xs font-medium text-slate-700 mb-1">
                   Full Name
                 </label>
                 <input
                   type="text"
                   value={name}
                   onChange={e => setName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-100 focus:outline-none focus:border-orange-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-orange-500 focus:bg-white"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-slate-400 mb-1">
+                <label className="block text-xs font-medium text-slate-700 mb-1">
                   Email Address (Optional)
                 </label>
                 <input
@@ -130,47 +128,47 @@ export const ProfileModal: React.FC = () => {
                   placeholder="name@example.com"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-100 focus:outline-none focus:border-orange-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-orange-500 focus:bg-white"
                 />
               </div>
             </div>
 
             <button
               type="submit"
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-colors"
+              className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-colors"
             >
-              Save Profile Changes
+              Save Changes
             </button>
           </form>
 
           {/* Saved Addresses Section */}
-          <div className="space-y-4 pt-4 border-t border-slate-800">
+          <div className="space-y-4 pt-4 border-t border-slate-100">
             <div className="flex items-center justify-between">
-              <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                <MapPin className="w-4 h-4 text-orange-400" />
+              <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                <MapPin className="w-4 h-4 text-orange-600" />
                 <span>Saved Delivery Addresses</span>
               </h3>
               {!showAddAddress && (
                 <button
                   type="button"
                   onClick={() => setShowAddAddress(true)}
-                  className="flex items-center gap-1 text-xs text-orange-400 hover:underline font-semibold"
+                  className="flex items-center gap-1 text-xs text-orange-600 hover:underline font-bold"
                 >
                   <Plus className="w-3.5 h-3.5" />
-                  <span>Add New Address</span>
+                  <span>Add New</span>
                 </button>
               )}
             </div>
 
             {/* Add Address Form */}
             {showAddAddress && (
-              <form onSubmit={handleCreateAddress} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+              <form onSubmit={handleCreateAddress} className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-amber-400">New Address Details</span>
+                  <span className="text-xs font-bold text-slate-900">New Address Details</span>
                   <button
                     type="button"
                     onClick={() => setShowAddAddress(false)}
-                    className="text-xs text-slate-400 hover:text-white"
+                    className="text-xs text-slate-500 hover:text-slate-800"
                   >
                     Cancel
                   </button>
@@ -182,8 +180,8 @@ export const ProfileModal: React.FC = () => {
                       key={t}
                       type="button"
                       onClick={() => setTag(t)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${
-                        tag === t ? 'bg-orange-500 text-slate-950' : 'bg-slate-800 text-slate-300'
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold ${
+                        tag === t ? 'bg-slate-900 text-white' : 'bg-white border border-slate-200 text-slate-700'
                       }`}
                     >
                       {t}
@@ -198,7 +196,7 @@ export const ProfileModal: React.FC = () => {
                     placeholder="Flat / House / Building *"
                     value={houseNo}
                     onChange={e => setHouseNo(e.target.value)}
-                    className="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-100"
+                    className="px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-900"
                   />
                   <input
                     type="text"
@@ -206,7 +204,7 @@ export const ProfileModal: React.FC = () => {
                     placeholder="Street / Road *"
                     value={street}
                     onChange={e => setStreet(e.target.value)}
-                    className="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-100"
+                    className="px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-900"
                   />
                   <input
                     type="text"
@@ -214,30 +212,30 @@ export const ProfileModal: React.FC = () => {
                     placeholder="Area / Locality *"
                     value={area}
                     onChange={e => setArea(e.target.value)}
-                    className="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-100"
+                    className="px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-900"
                   />
                   <input
                     type="text"
                     placeholder="Landmark (Optional)"
                     value={landmark}
                     onChange={e => setLandmark(e.target.value)}
-                    className="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-100"
+                    className="px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-900"
                   />
                 </div>
 
-                <label className="flex items-center gap-2 text-xs text-slate-300 cursor-pointer pt-1">
+                <label className="flex items-center gap-2 text-xs text-slate-700 cursor-pointer pt-1">
                   <input
                     type="checkbox"
                     checked={isDefault}
                     onChange={e => setIsDefault(e.target.checked)}
-                    className="rounded bg-slate-800 border-slate-700 text-orange-500"
+                    className="rounded text-orange-600 focus:ring-orange-500"
                   />
                   <span>Set as default delivery address</span>
                 </label>
 
                 <button
                   type="submit"
-                  className="w-full py-2.5 rounded-xl bg-orange-500 hover:bg-orange-400 text-slate-950 font-bold text-xs"
+                  className="w-full py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs"
                 >
                   Save Address
                 </button>
@@ -251,23 +249,23 @@ export const ProfileModal: React.FC = () => {
                   key={addr.id}
                   className={`p-3.5 rounded-2xl border flex items-start justify-between gap-3 transition-colors ${
                     addr.isDefault
-                      ? 'bg-slate-800/80 border-orange-500/40'
-                      : 'bg-slate-950/60 border-slate-800'
+                      ? 'bg-orange-50/50 border-orange-300'
+                      : 'bg-white border-slate-200'
                   }`}
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="flex items-center gap-1 text-xs font-bold text-white">
-                        {addr.tag === 'Home' ? <Home className="w-3.5 h-3.5 text-orange-400" /> : <Briefcase className="w-3.5 h-3.5 text-amber-400" />}
+                      <span className="flex items-center gap-1 text-xs font-bold text-slate-900">
+                        {addr.tag === 'Home' ? <Home className="w-3.5 h-3.5 text-orange-600" /> : <Briefcase className="w-3.5 h-3.5 text-slate-600" />}
                         {addr.tag}
                       </span>
                       {addr.isDefault && (
-                        <span className="bg-orange-500/20 text-orange-400 border border-orange-500/30 text-[10px] font-bold px-1.5 py-0.2 rounded-full">
+                        <span className="bg-orange-100 text-orange-700 text-[10px] font-bold px-1.5 py-0.2 rounded-full">
                           Default
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-slate-300">
+                    <p className="text-xs text-slate-600">
                       {addr.houseNo}, {addr.street}, {addr.area}, {addr.city} - {addr.pincode}
                     </p>
                     {addr.landmark && (
@@ -279,14 +277,14 @@ export const ProfileModal: React.FC = () => {
                     {!addr.isDefault && (
                       <button
                         onClick={() => setDefaultAddress(addr.id)}
-                        className="text-[11px] text-slate-400 hover:text-orange-400 px-2 py-1"
+                        className="text-[11px] text-slate-500 hover:text-orange-600 font-medium px-2 py-1"
                       >
                         Set Default
                       </button>
                     )}
                     <button
                       onClick={() => deleteAddress(addr.id)}
-                      className="p-1.5 text-slate-500 hover:text-rose-400 transition-colors"
+                      className="p-1.5 text-slate-400 hover:text-rose-600 transition-colors"
                       title="Delete"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -298,21 +296,21 @@ export const ProfileModal: React.FC = () => {
           </div>
         </div>
 
-        {/* Footer / Sign Out */}
-        <div className="p-4 bg-slate-950 border-t border-slate-800 flex items-center justify-between">
+        {/* Footer */}
+        <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
           <button
             onClick={() => {
               signOut();
               setIsProfileModalOpen(false);
             }}
-            className="flex items-center gap-1.5 text-xs text-rose-400 hover:text-rose-300 font-semibold transition-colors"
+            className="flex items-center gap-1.5 text-xs text-rose-600 hover:text-rose-700 font-bold transition-colors"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span>Sign Out</span>
           </button>
           <button
             onClick={() => setIsProfileModalOpen(false)}
-            className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-colors"
+            className="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold transition-colors"
           >
             Close
           </button>

@@ -30,43 +30,43 @@ export const OrderHistoryModal: React.FC = () => {
     switch (status) {
       case 'Awaiting Kitchen Confirmation':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-950/80 text-amber-300 border border-amber-500/40">
-            <Clock className="w-3 h-3" />
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
+            <Clock className="w-3 h-3 text-amber-600" />
             Awaiting Confirmation
           </span>
         );
       case 'Confirmed':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-sky-950/80 text-sky-300 border border-sky-500/40">
-            <CheckCircle2 className="w-3 h-3" />
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-50 text-sky-800 border border-sky-200">
+            <CheckCircle2 className="w-3 h-3 text-sky-600" />
             Confirmed
           </span>
         );
       case 'Preparing':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-purple-950/80 text-purple-300 border border-purple-500/40">
-            <ChefHat className="w-3 h-3" />
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-purple-50 text-purple-800 border border-purple-200">
+            <ChefHat className="w-3 h-3 text-purple-600" />
             Kitchen Preparing
           </span>
         );
       case 'Out for Delivery':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-orange-950/80 text-orange-300 border border-orange-500/40">
-            <Truck className="w-3 h-3" />
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-orange-50 text-orange-800 border border-orange-200">
+            <Truck className="w-3 h-3 text-orange-600" />
             Out for Delivery
           </span>
         );
       case 'Delivered':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-500/40">
-            <CheckCircle2 className="w-3 h-3" />
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
             Delivered
           </span>
         );
       case 'Cancelled':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-950/80 text-rose-300 border border-rose-500/40">
-            <AlertCircle className="w-3 h-3" />
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-50 text-rose-800 border border-rose-200">
+            <AlertCircle className="w-3 h-3 text-rose-600" />
             Cancelled
           </span>
         );
@@ -87,25 +87,25 @@ export const OrderHistoryModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm overflow-y-auto animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto animate-in fade-in duration-200">
       <div
-        className="relative w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden my-8 animate-in zoom-in-95 duration-200"
+        className="relative w-full max-w-2xl bg-white border border-slate-200 rounded-3xl shadow-2xl overflow-hidden my-8 animate-in zoom-in-95 duration-200"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
+        <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
           <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center">
               <History className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-black text-white">My Orders</h2>
-              <p className="text-xs text-slate-400">Order tracking and past order details</p>
+              <h2 className="text-lg font-black text-slate-900">Order History</h2>
+              <p className="text-xs text-slate-500">Track and reorder your past meals</p>
             </div>
           </div>
           <button
             onClick={() => setIsOrderHistoryOpen(false)}
-            className="p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white transition-colors"
+            className="p-2 rounded-xl text-slate-400 hover:text-slate-800 hover:bg-slate-200 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -115,13 +115,13 @@ export const OrderHistoryModal: React.FC = () => {
         <div className="p-6 max-h-[75vh] overflow-y-auto space-y-4">
           {!isVerified ? (
             <div className="p-8 text-center space-y-4">
-              <div className="w-16 h-16 mx-auto rounded-3xl bg-slate-800 flex items-center justify-center text-slate-500">
+              <div className="w-16 h-16 mx-auto rounded-3xl bg-slate-100 flex items-center justify-center text-slate-400">
                 <History className="w-8 h-8" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-white">Verify Phone to View Orders</h3>
-                <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1">
-                  Orders placed by your phone number are safely stored in our database. Verify your number to view cross-device order history.
+                <h3 className="text-base font-bold text-slate-900">Verify Phone to View Orders</h3>
+                <p className="text-xs text-slate-500 max-w-sm mx-auto mt-1">
+                  Orders placed on Moonlight Kitchen are associated with your verified phone number.
                 </p>
               </div>
               <button
@@ -129,18 +129,18 @@ export const OrderHistoryModal: React.FC = () => {
                   setIsOrderHistoryOpen(false);
                   setIsAuthModalOpen(true);
                 }}
-                className="px-5 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-400 text-slate-950 font-bold text-xs uppercase tracking-wider transition-colors"
+                className="px-5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase tracking-wider transition-colors"
               >
                 Verify Phone Number
               </button>
             </div>
           ) : orders.length === 0 ? (
             <div className="p-8 text-center space-y-3">
-              <div className="w-14 h-14 mx-auto rounded-2xl bg-slate-800/80 flex items-center justify-center text-slate-500">
+              <div className="w-14 h-14 mx-auto rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400">
                 <History className="w-7 h-7" />
               </div>
-              <h3 className="text-sm font-bold text-slate-200">No past orders yet</h3>
-              <p className="text-xs text-slate-400">
+              <h3 className="text-sm font-bold text-slate-800">No past orders yet</h3>
+              <p className="text-xs text-slate-500">
                 Place your first delicious order from Moonlight Kitchen!
               </p>
             </div>
@@ -148,43 +148,43 @@ export const OrderHistoryModal: React.FC = () => {
             orders.map(order => (
               <div
                 key={order.id}
-                className="p-4 sm:p-5 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-4 hover:border-slate-700 transition-colors"
+                className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 space-y-3.5 hover:border-slate-300 transition-colors shadow-2xs"
               >
                 {/* Order Top Bar */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800/80">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-bold text-amber-400">
+                      <span className="font-mono text-xs font-extrabold text-slate-900">
                         {order.orderReference}
                       </span>
                       {getStatusBadge(order.status)}
                     </div>
                     <div className="flex items-center gap-2 text-[11px] text-slate-400 mt-1">
-                      <Calendar className="w-3 h-3 text-slate-500" />
+                      <Calendar className="w-3 h-3 text-slate-400" />
                       <span>{order.createdAt}</span>
                     </div>
                   </div>
 
-                  <div className="text-right sm:text-right">
-                    <span className="text-xs text-slate-400 block">Total Amount</span>
-                    <span className="text-base font-black text-white">
+                  <div className="text-left sm:text-right">
+                    <span className="text-xs text-slate-400 block">Total</span>
+                    <span className="text-base font-extrabold text-slate-900">
                       {formatINR(order.pricing.finalTotal)}
                     </span>
                   </div>
                 </div>
 
                 {/* Items Summary */}
-                <div className="space-y-1.5 text-xs">
+                <div className="space-y-1 text-xs">
                   {order.items.map((item, idx) => (
-                    <div key={idx} className="flex justify-between text-slate-300">
+                    <div key={idx} className="flex justify-between text-slate-700">
                       <span>
-                        <strong className="text-orange-400">{item.quantity}x</strong> {item.name}
+                        <strong className="text-slate-900">{item.quantity}x</strong> {item.name}
                         {item.selectedVariant ? ` (${item.selectedVariant.name})` : ''}
                         {item.selectedAddons && item.selectedAddons.length > 0
                           ? ` + ${item.selectedAddons.map(a => a.name).join(', ')}`
                           : ''}
                       </span>
-                      <span className="text-slate-400">
+                      <span className="text-slate-500 font-medium">
                         {formatINR(item.unitPrice * item.quantity)}
                       </span>
                     </div>
@@ -192,8 +192,8 @@ export const OrderHistoryModal: React.FC = () => {
                 </div>
 
                 {/* Address Snippet */}
-                <div className="flex items-center gap-2 text-[11px] text-slate-400 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
-                  <MapPin className="w-3.5 h-3.5 text-orange-400 shrink-0" />
+                <div className="flex items-center gap-2 text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                  <MapPin className="w-3.5 h-3.5 text-orange-600 shrink-0" />
                   <span className="truncate">
                     {order.deliveryAddress.houseNo}, {order.deliveryAddress.street}, {order.deliveryAddress.area}
                   </span>
@@ -203,16 +203,16 @@ export const OrderHistoryModal: React.FC = () => {
                 <div className="flex items-center justify-between gap-3 pt-1">
                   <button
                     onClick={() => handleWhatsAppChat(order)}
-                    className="flex items-center gap-1.5 text-xs text-emerald-400 hover:text-emerald-300 font-semibold"
+                    className="flex items-center gap-1.5 text-xs text-emerald-700 hover:text-emerald-800 font-bold"
                   >
                     <MessageSquare className="w-3.5 h-3.5" />
-                    <span>Chat with Kitchen</span>
+                    <span>Inquire on WhatsApp</span>
                   </button>
 
                   <button
                     onClick={() => handleReorderClick(order)}
                     disabled={isLoading}
-                    className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition-colors border border-slate-700"
+                    className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition-colors shadow-2xs"
                   >
                     <RotateCcw className="w-3.5 h-3.5 text-amber-400" />
                     <span>Reorder</span>
