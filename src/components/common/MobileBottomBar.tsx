@@ -1,110 +1,66 @@
-import React from 'react';
-import { ShoppingBag, Utensils, History, User, Search, ArrowRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { Home, ShoppingBag, History, User } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
-import { useCustomer } from '../../context/CustomerContext';
-import { useOrder } from '../../context/OrderContext';
 import { formatINR } from '../../lib/pricing';
 
 interface MobileBottomBarProps {
-  onOpenSearch: () => void;
   onOpenCheckout: () => void;
+  activeTab: 'menu' | 'cart' | 'orders' | 'profile';
+  onTabChange: (tab: 'menu' | 'cart' | 'orders' | 'profile') => void;
 }
 
 export const MobileBottomBar: React.FC<MobileBottomBarProps> = ({
-  onOpenSearch,
+  onOpenCheckout,
+  activeTab,
+  onTabChange,
 }) => {
   const { totalItemCount, pricing, setIsCartOpen } = useCart();
-  const { isVerified, setIsAuthModalOpen, setIsProfileModalOpen } = useCustomer();
-  const { orders, setIsOrderHistoryOpen } = useOrder();
-
-  const handleProfileClick = () => {
-    if (isVerified) {
-      setIsProfileModalOpen(true);
-    } else {
-      setIsAuthModalOpen(true);
-    }
-  };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden">
-      {/* Sticky Cart Summary Bar when items exist in cart */}
+    <div className="fixed bottom-0 left-0 right-0 z-40 md:hidden">
+      {/* Cart preview bar (shows when cart has items) */}
       {totalItemCount > 0 && (
-        <div 
-          onClick={() => setIsCartOpen(true)}
-          className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-3 shadow-xl flex items-center justify-between cursor-pointer transition-colors"
+        <button
+          onClick={onOpenCheckout}
+          className="w-full flex items-center justify-between px-5 py-3 bg-amber-500 text-gray-900 font-extrabold text-sm shadow-xl"
         >
-          <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-orange-800 text-white flex items-center justify-center font-extrabold text-xs">
-              {totalItemCount}
-            </div>
-            <div>
-              <div className="text-xs font-black leading-tight">
-                {formatINR(pricing.finalTotal)}
-              </div>
-              <div className="text-[10px] text-orange-100 font-medium">
-                {pricing.isFreeDelivery ? 'FREE Delivery' : '+ Delivery ₹30'}
-              </div>
-            </div>
+          <div className="flex items-center gap-2">
+            <span className="bg-gray-900/20 text-gray-900 text-xs font-black px-2 py-0.5 rounded-full">
+              {totalItemCount} items
+            </span>
+            <span>View Order</span>
           </div>
-
-          <div className="flex items-center gap-1.5 font-bold text-xs uppercase tracking-wide">
-            <span>View Cart</span>
-            <ArrowRight className="w-3.5 h-3.5 stroke-[3]" />
-          </div>
-        </div>
+          <span>{formatINR(pricing.finalTotal)}</span>
+        </button>
       )}
 
-      {/* Main Bottom Nav Bar */}
-      <div className="bg-white border-t border-slate-200 px-3 py-2 flex items-center justify-around shadow-lg">
-        <button
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="flex flex-col items-center gap-0.5 text-orange-600 p-1"
-        >
-          <Utensils className="w-5 h-5" />
-          <span className="text-[10px] font-bold">Menu</span>
-        </button>
-
-        <button
-          onClick={onOpenSearch}
-          className="flex flex-col items-center gap-0.5 text-slate-500 hover:text-slate-900 p-1"
-        >
-          <Search className="w-5 h-5" />
-          <span className="text-[10px] font-medium">Search</span>
-        </button>
-
-        <button
-          onClick={() => setIsOrderHistoryOpen(true)}
-          className="relative flex flex-col items-center gap-0.5 text-slate-500 hover:text-slate-900 p-1"
-        >
-          <History className="w-5 h-5" />
-          <span className="text-[10px] font-medium">Orders</span>
-          {orders.length > 0 && (
-            <span className="absolute top-0 right-1 w-4 h-4 rounded-full bg-orange-600 text-white text-[9px] font-black flex items-center justify-center">
-              {orders.length}
-            </span>
-          )}
-        </button>
-
-        <button
-          onClick={handleProfileClick}
-          className="flex flex-col items-center gap-0.5 text-slate-500 hover:text-slate-900 p-1"
-        >
-          <User className="w-5 h-5" />
-          <span className="text-[10px] font-medium">{isVerified ? 'Profile' : 'Sign In'}</span>
-        </button>
-
-        <button
-          onClick={() => setIsCartOpen(true)}
-          className="relative flex flex-col items-center gap-0.5 text-slate-500 hover:text-slate-900 p-1"
-        >
-          <ShoppingBag className="w-5 h-5" />
-          <span className="text-[10px] font-medium">Cart</span>
-          {totalItemCount > 0 && (
-            <span className="absolute top-0 right-0 w-4 h-4 rounded-full bg-orange-600 text-white text-[9px] font-black flex items-center justify-center">
-              {totalItemCount}
-            </span>
-          )}
-        </button>
+      {/* Bottom Navigation */}
+      <div className="bg-gray-900 border-t border-gray-800 flex items-center">
+        {[
+          { id: 'menu' as const, label: 'Menu', icon: <Home className="w-5 h-5" /> },
+          { id: 'cart' as const, label: 'Cart', icon: <ShoppingBag className="w-5 h-5" />, badge: totalItemCount },
+          { id: 'orders' as const, label: 'Orders', icon: <History className="w-5 h-5" /> },
+          { id: 'profile' as const, label: 'Profile', icon: <User className="w-5 h-5" /> },
+        ].map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => {
+              if (tab.id === 'cart') setIsCartOpen(true);
+              else onTabChange(tab.id);
+            }}
+            className={`relative flex-1 flex flex-col items-center gap-1 py-3 text-[11px] font-bold transition-colors ${
+              activeTab === tab.id ? 'text-amber-400' : 'text-gray-500 hover:text-gray-300'
+            }`}
+          >
+            {tab.icon}
+            <span>{tab.label}</span>
+            {tab.badge != null && tab.badge > 0 && (
+              <span className="absolute top-1.5 right-[calc(50%-12px)] w-4 h-4 bg-amber-500 text-gray-900 text-[9px] font-black rounded-full flex items-center justify-center">
+                {tab.badge > 9 ? '9+' : tab.badge}
+              </span>
+            )}
+          </button>
+        ))}
       </div>
     </div>
   );

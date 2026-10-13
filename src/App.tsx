@@ -1,10 +1,9 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Header } from './components/common/Header';
 import { Footer } from './components/common/Footer';
 import { HeroBanner } from './components/common/HeroBanner';
 import { MobileBottomBar } from './components/common/MobileBottomBar';
-import { CategoryVisualShowcase } from './components/menu/CategoryVisualShowcase';
-import { StickyCategoryNav } from './components/menu/StickyCategoryNav';
+import { CategoryNav } from './components/menu/CategoryNav';
 import { SearchAndFilters } from './components/menu/SearchAndFilters';
 import { FoodCard } from './components/menu/FoodCard';
 import { FoodDetailModal } from './components/menu/FoodDetailModal';
@@ -15,37 +14,42 @@ import { OrderSuccessModal } from './components/checkout/OrderSuccessModal';
 import { PhoneAuthModal } from './components/profile/PhoneAuthModal';
 import { ProfileModal } from './components/profile/ProfileModal';
 import { OrderHistoryModal } from './components/orders/OrderHistoryModal';
-import { AdminModal } from './components/admin/AdminModal';
+import { AdminPage } from './components/admin/AdminPage';
 
 import { ToastProvider } from './context/ToastContext';
 import { CartProvider, useCart } from './context/CartContext';
-import { CustomerProvider } from './context/CustomerContext';
-import { OrderProvider } from './context/OrderContext';
+import { CustomerProvider, useCustomer } from './context/CustomerContext';
+import { OrderProvider, useOrder } from './context/OrderContext';
 
 import { MenuItem, DietaryType } from './types/menu';
 import { MENU_CATEGORIES } from './data/menu';
 import { fetchMenuItems } from './lib/storage';
-import { Utensils } from 'lucide-react';
+import { Utensils, Flame } from 'lucide-react';
+
+const CATEGORY_EMOJIS: Record<string, string> = {
+  pizza: '🍕', burger: '🍔', sandwich: '🥪', 'jumbo-sandwich': '🥖',
+  'fries-bowl': '🍟', maggi: '🍜', 'cold-beverages': '🥤',
+  biryani: '🍛', 'special-combo': '🎁', 'pizza-combos': '🍕', 'burger-combos': '🍔',
+};
 
 const MainApp: React.FC = () => {
   const { isCartOpen, setIsCartOpen } = useCart();
+  const { setIsOrderHistoryOpen } = useOrder();
+  const { setIsAuthModalOpen, setIsProfileModalOpen } = useCustomer();
 
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [isLoadingMenu, setIsLoadingMenu] = useState(true);
 
-  // Filters & Search
-  const [activeCategory, setActiveCategory] = useState<string>('all');
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  // Default is 'bestsellers' — not 'all'
+  const [activeCategory, setActiveCategory] = useState<string>('bestsellers');
+  const [searchQuery, setSearchQuery] = useState('');
   const [dietaryFilter, setDietaryFilter] = useState<DietaryType | 'all'>('all');
-  const [onlyBestsellers, setOnlyBestsellers] = useState<boolean>(false);
-  const [sortBy, setSortBy] = useState<'popular' | 'price-asc' | 'price-desc' | 'name'>('popular');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  // Modals state
   const [selectedDetailItem, setSelectedDetailItem] = useState<MenuItem | null>(null);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
-
-  const menuContainerRef = useRef<HTMLDivElement>(null);
+  const [mobilePrimaryTab, setMobilePrimaryTab] = useState<'menu' | 'cart' | 'orders' | 'profile'>('menu');
 
   const loadMenu = async () => {
     setIsLoadingMenu(true);
@@ -59,25 +63,22 @@ const MainApp: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    loadMenu();
-  }, []);
+  useEffect(() => { loadMenu(); }, []);
 
-  // Keyboard shortcut '/' to trigger search
+  // '/' key opens search
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === '/' && (e.target as HTMLElement).tagName !== 'INPUT') {
+      if (e.key === '/' && (e.target as HTMLElement).tagName !== 'INPUT' && (e.target as HTMLElement).tagName !== 'TEXTAREA') {
         e.preventDefault();
-        window.scrollTo({ top: 380, behavior: 'smooth' });
-        const input = document.querySelector('input[type="text"]') as HTMLInputElement;
-        if (input) input.focus();
+        setIsSearchOpen(true);
       }
+      if (e.key === 'Escape') setIsSearchOpen(false);
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Category counts
+  // Count per category
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {};
     menuItems.forEach(item => {
@@ -86,222 +87,174 @@ const MainApp: React.FC = () => {
     return counts;
   }, [menuItems]);
 
-  // Filter and sort items
+  // Filtered items based on active category, search, dietary
   const filteredItems = useMemo(() => {
     return menuItems.filter(item => {
-      if (activeCategory !== 'all' && item.category !== activeCategory) {
-        return false;
+      // Category filter
+      if (activeCategory === 'bestsellers') {
+        if (!item.isBestseller) return false;
+      } else if (activeCategory !== 'all') {
+        if (item.category !== activeCategory) return false;
       }
 
+      // Search
       if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase().trim();
-        const matchesName = item.name.toLowerCase().includes(q);
-        const matchesDesc = item.description.toLowerCase().includes(q);
-        const matchesCategory = item.category.toLowerCase().includes(q);
-        const matchesCombo = item.comboItems?.some(c => c.toLowerCase().includes(q));
-        if (!matchesName && !matchesDesc && !matchesCategory && !matchesCombo) {
-          return false;
-        }
+        const q = searchQuery.toLowerCase();
+        const match = item.name.toLowerCase().includes(q)
+          || item.description.toLowerCase().includes(q)
+          || item.category.toLowerCase().includes(q)
+          || (item.comboItems?.some(c => c.toLowerCase().includes(q)));
+        if (!match) return false;
       }
 
-      if (dietaryFilter !== 'all' && item.dietary !== dietaryFilter) {
-        return false;
-      }
-
-      if (onlyBestsellers && !item.isBestseller) {
-        return false;
-      }
+      // Dietary
+      if (dietaryFilter !== 'all' && item.dietary !== dietaryFilter) return false;
 
       return true;
     }).sort((a, b) => {
-      if (sortBy === 'price-asc') return a.basePrice - b.basePrice;
-      if (sortBy === 'price-desc') return b.basePrice - a.basePrice;
-      if (sortBy === 'name') return a.name.localeCompare(b.name);
+      // Always bestsellers first
       if (a.isBestseller && !b.isBestseller) return -1;
       if (!a.isBestseller && b.isBestseller) return 1;
       return 0;
     });
-  }, [menuItems, activeCategory, searchQuery, dietaryFilter, onlyBestsellers, sortBy]);
+  }, [menuItems, activeCategory, searchQuery, dietaryFilter]);
 
-  // Top-down smooth scroll to category section
-  const handleScrollToCategory = (categoryId: string) => {
-    setActiveCategory(categoryId);
-    if (categoryId === 'all') {
-      window.scrollTo({ top: 400, behavior: 'smooth' });
-      return;
-    }
-
-    const sectionEl = document.getElementById(`category-section-${categoryId}`);
-    if (sectionEl) {
-      const yOffset = -140; // account for sticky header & sticky category bar
-      const y = sectionEl.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: y, behavior: 'smooth' });
-    }
-  };
+  const hasActiveFilters = searchQuery !== '' || dietaryFilter !== 'all';
 
   const handleResetFilters = () => {
-    setActiveCategory('all');
     setSearchQuery('');
     setDietaryFilter('all');
-    setOnlyBestsellers(false);
-    setSortBy('popular');
+    setActiveCategory('bestsellers');
+    setIsSearchOpen(false);
   };
 
-  const handleFocusSearch = () => {
-    window.scrollTo({ top: 380, behavior: 'smooth' });
-    const input = document.querySelector('input[type="text"]') as HTMLInputElement;
-    if (input) input.focus();
+  const handleMobileTabChange = (tab: 'menu' | 'cart' | 'orders' | 'profile') => {
+    setMobilePrimaryTab(tab);
+    if (tab === 'orders') setIsOrderHistoryOpen(true);
+    if (tab === 'profile') setIsProfileModalOpen(true);
   };
+
+  const categoryLabel = activeCategory === 'bestsellers'
+    ? '🔥 Bestsellers'
+    : activeCategory === 'all'
+    ? '✨ All Items'
+    : `${CATEGORY_EMOJIS[activeCategory] || '🍽️'} ${MENU_CATEGORIES.find(c => c.id === activeCategory)?.name || activeCategory}`;
+
+  if (isAdminOpen) {
+    return (
+      <AdminPage
+        onClose={() => setIsAdminOpen(false)}
+        onMenuUpdated={loadMenu}
+      />
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-orange-500 selection:text-white">
-      {/* Top Header */}
+    <div className="min-h-screen bg-[#0B1120] text-gray-100 flex flex-col font-sans">
+      {/* Header */}
       <Header
-        onOpenSearch={handleFocusSearch}
+        onOpenSearch={() => setIsSearchOpen(true)}
         onOpenAdmin={() => setIsAdminOpen(true)}
+        isSearchOpen={isSearchOpen}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onCloseSearch={() => setIsSearchOpen(false)}
       />
 
-      {/* Sticky Top-Down Category Navigator Bar */}
-      <StickyCategoryNav
-        activeCategory={activeCategory}
-        onSelectCategory={handleScrollToCategory}
-        categoryCounts={categoryCounts}
-      />
-
-      {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-28 lg:pb-12" ref={menuContainerRef}>
-        <div className="flex gap-8 items-start">
-          {/* Main Content Column */}
+      {/* Main Layout */}
+      <main className="flex-1 max-w-screen-xl w-full mx-auto px-4 sm:px-6 py-6 pb-32 md:pb-12">
+        <div className="flex gap-6 items-start">
+          {/* Content */}
           <div className="flex-1 min-w-0">
-            {/* Restaurant Hero Card */}
+            {/* Hero Banner */}
             <HeroBanner
               onExploreClick={() => {
-                const el = document.getElementById('discovery-section');
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('menu-section')?.scrollIntoView({ behavior: 'smooth' });
               }}
             />
 
-            {/* Top Category Visual Showcase ("What's on your mind?") */}
-            <CategoryVisualShowcase
-              onCategoryClick={handleScrollToCategory}
-              categoryCounts={categoryCounts}
-            />
+            {/* Menu Section */}
+            <div id="menu-section">
+              {/* Category Chip Nav */}
+              <CategoryNav
+                activeCategory={activeCategory}
+                onSelectCategory={setActiveCategory}
+                categoryCounts={categoryCounts}
+              />
 
-            {/* Search, Dietary Filters & Sort */}
-            <div id="discovery-section">
+              {/* Search + Filters */}
               <SearchAndFilters
                 searchQuery={searchQuery}
                 onSearchChange={setSearchQuery}
                 dietaryFilter={dietaryFilter}
                 onDietaryChange={setDietaryFilter}
-                onlyBestsellers={onlyBestsellers}
-                onToggleBestsellers={() => setOnlyBestsellers(prev => !prev)}
-                sortBy={sortBy}
-                onSortChange={setSortBy}
                 totalFilteredCount={filteredItems.length}
                 onResetFilters={handleResetFilters}
+                hasActiveFilters={hasActiveFilters}
               />
-            </div>
 
-            {/* Food Grid / Top-Down Grouped Category Sections */}
-            {isLoadingMenu ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="h-44 rounded-2xl bg-white border border-slate-200 animate-pulse"
-                  />
-                ))}
+              {/* Section heading */}
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-black text-white">
+                  {searchQuery ? `Results for "${searchQuery}"` : categoryLabel}
+                </h2>
+                <span className="text-xs text-gray-500 font-medium">
+                  {isLoadingMenu ? '...' : `${filteredItems.length} items`}
+                </span>
               </div>
-            ) : filteredItems.length === 0 ? (
-              <div className="p-16 rounded-3xl bg-white border border-slate-200 text-center space-y-3 shadow-2xs">
-                <div className="w-16 h-16 mx-auto rounded-3xl bg-slate-100 flex items-center justify-center text-slate-400">
-                  <Utensils className="w-8 h-8" />
+
+              {/* Items Grid */}
+              {isLoadingMenu ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="h-44 rounded-2xl skeleton" />
+                  ))}
                 </div>
-                <h3 className="text-base font-bold text-slate-900">No dishes match your filter</h3>
-                <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                  Try clearing your search query or dietary filters to browse the entire menu.
-                </p>
-                <button
-                  onClick={handleResetFilters}
-                  className="px-5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-xs"
-                >
-                  Reset All Filters
-                </button>
-              </div>
-            ) : activeCategory === 'all' && !searchQuery ? (
-              // Top-Down Flow: Dedicated Category Sections with anchors
-              <div className="space-y-10">
-                {MENU_CATEGORIES.filter(c => c.id !== 'all').map(cat => {
-                  const catItems = filteredItems.filter(i => i.category === cat.id);
-                  if (catItems.length === 0) return null;
-
-                  return (
-                    <section
-                      key={cat.id}
-                      id={`category-section-${cat.id}`}
-                      className="space-y-4 pt-4 border-t first:border-t-0 border-slate-200/80"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight font-serif">
-                            {cat.name}
-                          </h2>
-                          {cat.description && (
-                            <p className="text-xs text-slate-500 mt-0.5">
-                              {cat.description}
-                            </p>
-                          )}
-                        </div>
-                        <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2.5 py-1 rounded-full">
-                          {catItems.length} {catItems.length === 1 ? 'item' : 'items'}
-                        </span>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {catItems.map(item => (
-                          <FoodCard
-                            key={item.id}
-                            item={item}
-                            onOpenDetailModal={it => setSelectedDetailItem(it)}
-                          />
-                        ))}
-                      </div>
-                    </section>
-                  );
-                })}
-              </div>
-            ) : (
-              // Filtered / Search Results View
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {filteredItems.map(item => (
-                  <FoodCard
-                    key={item.id}
-                    item={item}
-                    onOpenDetailModal={it => setSelectedDetailItem(it)}
-                  />
-                ))}
-              </div>
-            )}
+              ) : filteredItems.length === 0 ? (
+                <div className="py-16 rounded-2xl bg-gray-800/40 border border-gray-700/60 text-center">
+                  <div className="w-16 h-16 mx-auto rounded-2xl bg-gray-700 flex items-center justify-center mb-4">
+                    <Utensils className="w-8 h-8 text-gray-500" />
+                  </div>
+                  <h3 className="text-base font-bold text-gray-300">No dishes found</h3>
+                  <p className="text-xs text-gray-500 mt-1 mb-4">Try a different category or clear filters</p>
+                  <button
+                    onClick={handleResetFilters}
+                    className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-gray-900 font-bold text-xs transition-colors"
+                  >
+                    Show Bestsellers
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {filteredItems.map(item => (
+                    <FoodCard
+                      key={item.id}
+                      item={item}
+                      onOpenDetailModal={setSelectedDetailItem}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Persistent Desktop Basket Side Panel (Visible on screens >= 1280px) */}
-          <div className="hidden xl:block shrink-0">
+          {/* Desktop Cart Panel */}
+          <div className="hidden lg:block shrink-0">
             <DesktopCartPanel onOpenCheckout={() => setIsCheckoutOpen(true)} />
           </div>
         </div>
       </main>
 
-      {/* Footer */}
       <Footer />
 
-      {/* Mobile Sticky Bottom Bar */}
+      {/* Mobile Bottom Bar */}
       <MobileBottomBar
-        onOpenSearch={handleFocusSearch}
         onOpenCheckout={() => setIsCheckoutOpen(true)}
+        activeTab={mobilePrimaryTab}
+        onTabChange={handleMobileTabChange}
       />
 
-      {/* Modals & Drawers */}
+      {/* Drawers & Modals */}
       <CartDrawer
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
@@ -322,12 +275,6 @@ const MainApp: React.FC = () => {
       <PhoneAuthModal />
       <ProfileModal />
       <OrderHistoryModal />
-
-      <AdminModal
-        isOpen={isAdminOpen}
-        onClose={() => setIsAdminOpen(false)}
-        onMenuUpdated={loadMenu}
-      />
     </div>
   );
 };

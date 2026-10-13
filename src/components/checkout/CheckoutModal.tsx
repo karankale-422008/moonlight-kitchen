@@ -6,7 +6,8 @@ import {
   MessageSquare, 
   CreditCard, 
   AlertCircle,
-  FileText
+  FileText,
+  Truck
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useCustomer } from '../../context/CustomerContext';
@@ -41,27 +42,19 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
   const [validationError, setValidationError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isOpen) {
-      if (profile) {
-        setFullName(profile.fullName || '');
-        setPhone(profile.phone || '');
-      }
-
-      if (activeAddress) {
-        setHouseNo(activeAddress.houseNo || '');
-        setStreet(activeAddress.street || '');
-        setArea(activeAddress.area || '');
-        setCity(activeAddress.city || '');
-        setPincode(activeAddress.pincode || '');
-        setLandmark(activeAddress.landmark || '');
-        setDeliveryInstructions(activeAddress.deliveryInstructions || '');
-      } else {
-        setCity('Delivery City');
-        setPincode('400001');
-      }
-      setValidationError(null);
+    if (profile) {
+      if (profile.fullName) setFullName(profile.fullName);
+      if (profile.phone) setPhone(profile.phone);
     }
-  }, [isOpen, profile, activeAddress]);
+    if (activeAddress) {
+      setHouseNo(activeAddress.houseNo || '');
+      setStreet(activeAddress.street || '');
+      setArea(activeAddress.area || '');
+      setCity(activeAddress.city || '');
+      setPincode(activeAddress.pincode || '');
+      setLandmark(activeAddress.landmark || '');
+    }
+  }, [profile, activeAddress, isOpen]);
 
   if (!isOpen) return null;
 
@@ -98,39 +91,35 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
       return;
     }
 
+    const orderAddress: CustomerAddress = {
+      id: activeAddress?.id || `addr_${Date.now()}`,
+      tag: 'Home',
+      houseNo: houseNo.trim(),
+      street: street.trim(),
+      area: area.trim(),
+      city: city.trim() || 'Delivery Zone',
+      state: 'State',
+      pincode: pincode.trim() || '000000',
+      landmark: landmark.trim() || undefined,
+      isDefault: true,
+    };
+
     setIsSubmitting(true);
-
     try {
-      const addressObj: CustomerAddress = {
-        id: activeAddress?.id || `addr_${Date.now()}`,
-        tag: activeAddress?.tag || 'Home',
-        houseNo: houseNo.trim(),
-        street: street.trim(),
-        area: area.trim(),
-        city: city.trim() || 'Delivery City',
-        state: 'State',
-        pincode: pincode.trim() || '400001',
-        landmark: landmark.trim() || undefined,
-        deliveryInstructions: deliveryInstructions.trim() || undefined,
-        isDefault: true,
-      };
-
-      if (profile) {
+      if (!profile?.fullName || !profile?.phone) {
         await updateProfile({ fullName: fullName.trim(), phone: cleanPhone });
-        if (!activeAddress) {
-          await addAddress(addressObj);
-        }
       }
 
-      const created = await createOrder(
+      const order = await createOrder(
         items,
         pricing,
-        addressObj,
+        orderAddress,
         paymentPreference,
         deliveryInstructions.trim() || undefined
       );
 
-      if (created) {
+      if (order) {
+        showToast('Order prepared! Opening WhatsApp...', 'success');
         onClose();
       }
     } catch (err: any) {
@@ -142,24 +131,24 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto animate-in fade-in duration-200">
       <div
-        className="relative w-full max-w-2xl bg-white border border-slate-200 rounded-3xl shadow-2xl overflow-hidden my-8 animate-in zoom-in-95 duration-200"
+        className="relative w-full max-w-2xl bg-gray-900 border border-gray-700 rounded-3xl shadow-2xl overflow-hidden my-8 animate-in zoom-in-95 duration-200 text-gray-100"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+        <div className="p-5 border-b border-gray-800 flex items-center justify-between bg-gray-900/90">
           <div>
-            <h2 className="text-lg sm:text-xl font-extrabold text-slate-900">
+            <h2 className="text-lg sm:text-xl font-extrabold text-white">
               Checkout &amp; Delivery Details
             </h2>
-            <p className="text-xs text-slate-500">
-              Complete your address to place order via WhatsApp
+            <p className="text-xs text-gray-400">
+              Provide delivery details to place your WhatsApp order
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-800 hover:bg-slate-200 transition-colors"
+            className="p-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -168,21 +157,21 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
         {/* Form Body */}
         <form onSubmit={handleSubmitOrder} className="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
           {validationError && (
-            <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center gap-2.5">
-              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+            <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-semibold flex items-center gap-2.5">
+              <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
               <span>{validationError}</span>
             </div>
           )}
 
           {/* Customer Personal Details */}
           <div className="space-y-3">
-            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-              <User className="w-4 h-4 text-orange-600" />
+            <h3 className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+              <User className="w-4 h-4 text-amber-400" />
               <span>1. Contact Information</span>
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">
+                <label className="block text-xs font-medium text-gray-300 mb-1">
                   Full Name *
                 </label>
                 <input
@@ -191,15 +180,15 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
                   placeholder="e.g. Rahul Sharma"
                   value={fullName}
                   onChange={e => setFullName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-orange-500 focus:bg-white"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-gray-800 border border-gray-700 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-amber-500"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">
+                <label className="block text-xs font-medium text-gray-300 mb-1">
                   WhatsApp Mobile Number (10 Digits) *
                 </label>
                 <div className="flex">
-                  <span className="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-slate-200 bg-slate-100 text-slate-700 text-xs font-bold">
+                  <span className="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-gray-700 bg-gray-800 text-gray-300 text-xs font-bold">
                     +91
                   </span>
                   <input
@@ -209,7 +198,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
                     placeholder="9876543210"
                     value={phone}
                     onChange={e => setPhone(e.target.value.replace(/\D/g, ''))}
-                    className="w-full px-3.5 py-2.5 rounded-r-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-orange-500 focus:bg-white font-mono"
+                    className="w-full px-3.5 py-2.5 rounded-r-xl bg-gray-800 border border-gray-700 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 font-mono"
                   />
                 </div>
               </div>
@@ -217,14 +206,14 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
           </div>
 
           {/* Delivery Address Details */}
-          <div className="space-y-3 pt-2 border-t border-slate-100">
-            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-              <MapPin className="w-4 h-4 text-orange-600" />
+          <div className="space-y-3 pt-3 border-t border-gray-800">
+            <h3 className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+              <MapPin className="w-4 h-4 text-amber-400" />
               <span>2. Delivery Address</span>
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">
+                <label className="block text-xs font-medium text-gray-300 mb-1">
                   Flat / House / Building *
                 </label>
                 <input
@@ -233,11 +222,11 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
                   placeholder="e.g. Flat 402, Sunshine Apts"
                   value={houseNo}
                   onChange={e => setHouseNo(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-orange-500 focus:bg-white"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-gray-800 border border-gray-700 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-amber-500"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">
+                <label className="block text-xs font-medium text-gray-300 mb-1">
                   Street / Road *
                 </label>
                 <input
@@ -246,11 +235,11 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
                   placeholder="e.g. MG Road, Near Central Mall"
                   value={street}
                   onChange={e => setStreet(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-orange-500 focus:bg-white"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-gray-800 border border-gray-700 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-amber-500"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">
+                <label className="block text-xs font-medium text-gray-300 mb-1">
                   Area / Locality *
                 </label>
                 <input
@@ -259,11 +248,11 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
                   placeholder="e.g. Shivaji Nagar / Sector 14"
                   value={area}
                   onChange={e => setArea(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-orange-500 focus:bg-white"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-gray-800 border border-gray-700 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-amber-500"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">
+                <label className="block text-xs font-medium text-gray-300 mb-1">
                   Landmark (Optional)
                 </label>
                 <input
@@ -271,13 +260,13 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
                   placeholder="e.g. Opposite City Hospital"
                   value={landmark}
                   onChange={e => setLandmark(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-orange-500 focus:bg-white"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-gray-800 border border-gray-700 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-amber-500"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">
+              <label className="block text-xs font-medium text-gray-300 mb-1">
                 Delivery Instructions (Optional)
               </label>
               <input
@@ -285,15 +274,15 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
                 placeholder="e.g. Ring bell, leave with security..."
                 value={deliveryInstructions}
                 onChange={e => setDeliveryInstructions(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-orange-500 focus:bg-white"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-gray-800 border border-gray-700 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-amber-500"
               />
             </div>
           </div>
 
           {/* Payment Preference */}
-          <div className="space-y-3 pt-2 border-t border-slate-100">
-            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-              <CreditCard className="w-4 h-4 text-orange-600" />
+          <div className="space-y-3 pt-3 border-t border-gray-800">
+            <h3 className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+              <CreditCard className="w-4 h-4 text-amber-400" />
               <span>3. Payment Method</span>
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
@@ -310,12 +299,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
                     onClick={() => setPaymentPreference(opt.id as PaymentPreference)}
                     className={`p-3 rounded-xl border text-left transition-all ${
                       isSelected
-                        ? 'bg-orange-50 border-orange-500 text-slate-900 shadow-2xs'
-                        : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300'
+                        ? 'bg-amber-500/10 border-amber-500 text-white'
+                        : 'bg-gray-800 border-gray-700 text-gray-300 hover:border-gray-600'
                     }`}
                   >
                     <div className="text-xs font-bold">{opt.id}</div>
-                    <div className="text-[11px] text-slate-500 mt-0.5">{opt.desc}</div>
+                    <div className="text-[11px] text-gray-400 mt-0.5">{opt.desc}</div>
                   </button>
                 );
               })}
@@ -323,37 +312,37 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
           </div>
 
           {/* Order Summary & Pricing */}
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5">
-            <div className="flex items-center justify-between text-xs font-bold text-slate-800">
+          <div className="p-4 rounded-2xl bg-gray-800/70 border border-gray-700 space-y-2.5">
+            <div className="flex items-center justify-between text-xs font-bold text-gray-200">
               <span className="flex items-center gap-1.5">
-                <FileText className="w-4 h-4 text-orange-600" />
+                <FileText className="w-4 h-4 text-amber-400" />
                 <span>Order Summary ({items.reduce((s, i) => s + i.quantity, 0)} items)</span>
               </span>
-              <span className="text-orange-600 font-extrabold text-sm">{formatINR(pricing.finalTotal)}</span>
+              <span className="text-amber-400 font-extrabold text-sm">{formatINR(pricing.finalTotal)}</span>
             </div>
 
-            <div className="max-h-28 overflow-y-auto space-y-1 text-xs text-slate-600 pr-2">
+            <div className="max-h-28 overflow-y-auto space-y-1 text-xs text-gray-400 pr-2">
               {items.map(item => (
                 <div key={item.id} className="flex justify-between">
                   <span className="truncate max-w-[280px]">
                     {item.quantity}x {item.name} {item.selectedVariant ? `(${item.selectedVariant.name})` : ''}
                   </span>
-                  <span className="text-slate-900 font-medium">{formatINR(item.unitPrice * item.quantity)}</span>
+                  <span className="text-gray-200 font-medium">{formatINR(item.unitPrice * item.quantity)}</span>
                 </div>
               ))}
             </div>
 
-            <div className="border-t border-slate-200 pt-2 flex justify-between text-xs text-slate-700 font-medium">
+            <div className="border-t border-gray-700 pt-2 flex justify-between text-xs text-gray-300 font-medium">
               <span>Delivery Fee:</span>
-              <span>{pricing.isFreeDelivery ? <strong className="text-emerald-700">FREE</strong> : formatINR(pricing.deliveryCharge)}</span>
+              <span>{pricing.isFreeDelivery ? <strong className="text-green-400">FREE</strong> : formatINR(pricing.deliveryCharge)}</span>
             </div>
           </div>
 
           {/* WhatsApp Direct Dispatch Notice */}
-          <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs flex items-start gap-2.5">
-            <MessageSquare className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
+          <div className="p-3.5 rounded-xl bg-green-500/10 border border-green-500/30 text-green-300 text-xs flex items-start gap-2.5">
+            <MessageSquare className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
             <p className="leading-relaxed">
-              When submitted, your order will be recorded in our system and opened directly in WhatsApp with <strong>Moonlight Kitchen (7666445477)</strong>. Tap <strong>Send</strong> in WhatsApp to dispatch!
+              When submitted, your order will be recorded in our system and opened directly in WhatsApp with <strong>Moonlight Kitchen (7666445477)</strong>. Tap <strong>Send</strong> in WhatsApp to confirm!
             </p>
           </div>
 
@@ -361,7 +350,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full flex items-center justify-center gap-2 p-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-extrabold text-sm shadow-md transition-all uppercase tracking-wider disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2 p-4 rounded-xl bg-amber-500 hover:bg-amber-400 active:scale-[0.99] text-gray-900 font-black text-sm shadow-lg shadow-amber-900/30 transition-all uppercase tracking-wider disabled:opacity-50"
           >
             {isSubmitting ? (
               <span>Preparing Order...</span>
