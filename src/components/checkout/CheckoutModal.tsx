@@ -119,7 +119,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
       );
 
       if (order) {
-        showToast('Order prepared! Opening WhatsApp...', 'success');
+        showToast('Order confirmed! Transmitting to kitchen...', 'success');
         onClose();
       }
     } catch (err: any) {
@@ -143,7 +143,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
               Checkout &amp; Delivery Details
             </h2>
             <p className="text-xs text-gray-400">
-              Provide delivery details to place your WhatsApp order
+              Complete your delivery address to place your order directly with the kitchen
             </p>
           </div>
           <button
@@ -338,11 +338,11 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
             </div>
           </div>
 
-          {/* WhatsApp Direct Dispatch Notice */}
-          <div className="p-3.5 rounded-xl bg-green-500/10 border border-green-500/30 text-green-300 text-xs flex items-start gap-2.5">
-            <MessageSquare className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
+          {/* Live Kitchen Transmission Notice */}
+          <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex items-start gap-2.5">
+            <AlertCircle className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" />
             <p className="leading-relaxed">
-              When submitted, your order will be recorded in our system and opened directly in WhatsApp with <strong>Moonlight Kitchen (7666445477)</strong>. Tap <strong>Send</strong> in WhatsApp to confirm!
+              Your order is transmitted directly to <strong>Moonlight Kitchen's live order dashboard</strong>. Pay securely with Cash or UPI upon delivery.
             </p>
           </div>
 
@@ -350,14 +350,14 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full flex items-center justify-center gap-2 p-4 rounded-xl bg-amber-500 hover:bg-amber-400 active:scale-[0.99] text-gray-900 font-black text-sm shadow-lg shadow-amber-900/30 transition-all uppercase tracking-wider disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2 p-4 rounded-xl bg-amber-500 hover:bg-amber-400 active:scale-[0.99] text-gray-950 font-black text-sm shadow-xl shadow-amber-900/40 transition-all uppercase tracking-wider disabled:opacity-50"
           >
             {isSubmitting ? (
-              <span>Preparing Order...</span>
+              <span>Submitting Order to Kitchen...</span>
             ) : (
               <>
-                <MessageSquare className="w-5 h-5 fill-current" />
-                <span>Place Order via WhatsApp — {formatINR(pricing.finalTotal)}</span>
+                <FileText className="w-5 h-5" />
+                <span>Confirm &amp; Place Order — {formatINR(pricing.finalTotal)}</span>
               </>
             )}
           </button>

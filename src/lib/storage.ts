@@ -3,79 +3,259 @@ import { CustomerProfile, CustomerAddress } from '../types/customer';
 import { OrderRecord, OrderStatus } from '../types/order';
 import { MenuItem } from '../types/menu';
 import { MENU_ITEMS } from '../data/menu';
+import { BannerItem } from '../types/banner';
+import { RestaurantSettings } from '../types/settings';
+import { RESTAURANT_CONFIG } from '../config/restaurant';
 
 const STORAGE_KEYS = {
   PROFILE: 'moonlight_customer_profile',
   ORDERS: 'moonlight_orders_history',
   MENU_OVERRIDE: 'moonlight_menu_override',
+  MENU_ADDED: 'moonlight_added_menu_items',
+  MENU_DELETED: 'moonlight_deleted_menu_items',
+  BANNERS: 'moonlight_banner_slides',
+  SETTINGS: 'moonlight_restaurant_settings',
   CART: 'moonlight_cart_items',
 };
 
 // ====================================================
-// MENU MANAGEMENT (Supports DB / Local Owner Overrides)
+// 5 DEFAULT BANNER SLIDER IMAGES
+// ====================================================
+export const DEFAULT_BANNERS: BannerItem[] = [
+  {
+    id: 'banner_1',
+    title: 'Artisanal Handcrafted Pizzas',
+    subtitle: '100% Real Mozzarella, Signature Herb Crust & Fresh Toppings',
+    tag: 'FLAT 10% OFF • CODE: MOONLIGHT10',
+    imageUrl: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1400&q=80',
+    categoryLink: 'pizza',
+    isActive: true,
+  },
+  {
+    id: 'banner_2',
+    title: 'Gourmet Loaded Burgers',
+    subtitle: 'Golden Grilled Patties, Cheddar Cheese & Creamy House Sauce',
+    tag: 'BESTSELLERS FROM ₹69',
+    imageUrl: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1400&q=80',
+    categoryLink: 'burger',
+    isActive: true,
+  },
+  {
+    id: 'banner_3',
+    title: 'Royal Dum Biryani',
+    subtitle: 'Slow-Cooked Aromatic Long-Grain Basmati Infused with Royal Spices',
+    tag: 'CHEF’S SPECIALTY',
+    imageUrl: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=1400&q=80',
+    categoryLink: 'biryani',
+    isActive: true,
+  },
+  {
+    id: 'banner_4',
+    title: 'Jumbo Grilled Sandwiches',
+    subtitle: 'Tri-Layer Toasted Bread Loaded with Cheese, Veggies & Spiced Chutney',
+    tag: 'FRESH & CRISPY',
+    imageUrl: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=1400&q=80',
+    categoryLink: 'jumbo-sandwich',
+    isActive: true,
+  },
+  {
+    id: 'banner_5',
+    title: 'Moonlight Super Combos',
+    subtitle: 'Pizza + Burger + Crispy Fries + Chilled Beverage at Unbeatable Value',
+    tag: 'SAVE UP TO 30%',
+    imageUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1400&q=80',
+    categoryLink: 'special-combo',
+    isActive: true,
+  },
+];
+
+// ====================================================
+// BANNER SLIDER MANAGEMENT (EDITABLE FROM ADMIN)
+// ====================================================
+
+export async function fetchBanners(): Promise<BannerItem[]> {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.BANNERS);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch (err) {
+    console.error('Error reading banners from local storage:', err);
+  }
+  // Initialize with defaults if none saved
+  try {
+    localStorage.setItem(STORAGE_KEYS.BANNERS, JSON.stringify(DEFAULT_BANNERS));
+  } catch (err) {
+    console.error('Error saving default banners:', err);
+  }
+  return DEFAULT_BANNERS;
+}
+
+export async function saveBanners(banners: BannerItem[]): Promise<boolean> {
+  try {
+    localStorage.setItem(STORAGE_KEYS.BANNERS, JSON.stringify(banners));
+    return true;
+  } catch (err) {
+    console.error('Failed to save banners:', err);
+    return false;
+  }
+}
+
+export async function addBanner(bannerData: Omit<BannerItem, 'id'>): Promise<BannerItem> {
+  const current = await fetchBanners();
+  const newBanner: BannerItem = {
+    ...bannerData,
+    id: `banner_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
+  };
+  const updated = [...current, newBanner];
+  await saveBanners(updated);
+  return newBanner;
+}
+
+export async function updateBanner(updatedBanner: BannerItem): Promise<boolean> {
+  const current = await fetchBanners();
+  const updated = current.map(b => (b.id === updatedBanner.id ? updatedBanner : b));
+  return saveBanners(updated);
+}
+
+export async function deleteBanner(bannerId: string): Promise<boolean> {
+  const current = await fetchBanners();
+  const updated = current.filter(b => b.id !== bannerId);
+  return saveBanners(updated);
+}
+
+// ====================================================
+// WEBSITE SETTINGS (EDITABLE FROM ADMIN)
+// ====================================================
+
+export const DEFAULT_SETTINGS: RestaurantSettings = {
+  name: RESTAURANT_CONFIG.name,
+  tagline: RESTAURANT_CONFIG.tagline,
+  promoBannerText: `FREE delivery on orders above ₹${RESTAURANT_CONFIG.freeDeliveryThreshold} • Use code MOONLIGHT10 for 10% off`,
+  contactPhone: RESTAURANT_CONFIG.displayPhone,
+  whatsappNumber: RESTAURANT_CONFIG.whatsappNumber,
+  operatingHours: RESTAURANT_CONFIG.operatingHours,
+  standardDeliveryFee: RESTAURANT_CONFIG.standardDeliveryFee,
+  freeDeliveryThreshold: RESTAURANT_CONFIG.freeDeliveryThreshold,
+  minOrderAmount: RESTAURANT_CONFIG.minOrderAmount,
+  city: RESTAURANT_CONFIG.city,
+  address: 'Shop No. 4, Moonlight Kitchen, Near City Center',
+};
+
+export async function fetchRestaurantSettings(): Promise<RestaurantSettings> {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.SETTINGS);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      return { ...DEFAULT_SETTINGS, ...parsed };
+    }
+  } catch (err) {
+    console.error('Error reading settings:', err);
+  }
+  return DEFAULT_SETTINGS;
+}
+
+export async function saveRestaurantSettings(settings: RestaurantSettings): Promise<boolean> {
+  try {
+    localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
+    return true;
+  } catch (err) {
+    console.error('Error saving restaurant settings:', err);
+    return false;
+  }
+}
+
+// ====================================================
+// MENU MANAGEMENT (EDIT, ADD NEW DISH, DELETE DISH)
 // ====================================================
 
 export async function fetchMenuItems(): Promise<MenuItem[]> {
-  if (isSupabaseConfigured && supabase) {
-    try {
-      const { data, error } = await supabase
-        .from('menu_items')
-        .select('*')
-        .order('category', { ascending: true });
-      if (!error && data && data.length > 0) {
-        return data.map((d: any) => ({
-          id: d.id,
-          name: d.name,
-          category: d.category,
-          basePrice: d.base_price,
-          description: d.description || '',
-          image: d.image_url,
-          dietary: d.dietary_type || 'veg',
-          variants: d.variants || undefined,
-          addons: d.addons || undefined,
-          isAvailable: d.is_available,
-          isBestseller: d.is_bestseller || false,
-          comboItems: d.combo_items || undefined,
-        }));
-      }
-    } catch (err) {
-      console.warn('Falling back to local menu state:', err);
-    }
-  }
-
-  // Fallback to local storage overrides or static MENU_ITEMS
   try {
-    const raw = localStorage.getItem(STORAGE_KEYS.MENU_OVERRIDE);
-    if (raw) {
-      const overrides: Record<string, Partial<MenuItem>> = JSON.parse(raw);
-      return MENU_ITEMS.map(item => {
+    const overridesRaw = localStorage.getItem(STORAGE_KEYS.MENU_OVERRIDE);
+    const addedRaw = localStorage.getItem(STORAGE_KEYS.MENU_ADDED);
+    const deletedRaw = localStorage.getItem(STORAGE_KEYS.MENU_DELETED);
+
+    const overrides: Record<string, Partial<MenuItem>> = overridesRaw ? JSON.parse(overridesRaw) : {};
+    const addedItems: MenuItem[] = addedRaw ? JSON.parse(addedRaw) : [];
+    const deletedIds: string[] = deletedRaw ? JSON.parse(deletedRaw) : [];
+
+    // Base items with overrides and without deleted ones
+    const baseItems = MENU_ITEMS
+      .filter(item => !deletedIds.includes(item.id))
+      .map(item => {
         if (overrides[item.id]) {
           return { ...item, ...overrides[item.id] };
         }
         return item;
       });
-    }
+
+    // Added items with overrides and without deleted ones
+    const customItems = addedItems
+      .filter(item => !deletedIds.includes(item.id))
+      .map(item => {
+        if (overrides[item.id]) {
+          return { ...item, ...overrides[item.id] };
+        }
+        return item;
+      });
+
+    return [...baseItems, ...customItems];
   } catch (err) {
-    console.error('Error reading local menu overrides', err);
+    console.error('Error fetching menu items:', err);
+    return MENU_ITEMS;
+  }
+}
+
+export async function addMenuItem(itemData: Omit<MenuItem, 'id'>): Promise<MenuItem> {
+  const newItem: MenuItem = {
+    ...itemData,
+    id: `custom_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
+  };
+
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.MENU_ADDED);
+    const existing: MenuItem[] = raw ? JSON.parse(raw) : [];
+    const updated = [newItem, ...existing];
+    localStorage.setItem(STORAGE_KEYS.MENU_ADDED, JSON.stringify(updated));
+  } catch (err) {
+    console.error('Failed to add custom menu item:', err);
   }
 
-  return MENU_ITEMS;
+  return newItem;
+}
+
+export async function updateMenuItem(updatedItem: MenuItem): Promise<boolean> {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.MENU_OVERRIDE);
+    const overrides: Record<string, Partial<MenuItem>> = raw ? JSON.parse(raw) : {};
+    overrides[updatedItem.id] = { ...overrides[updatedItem.id], ...updatedItem };
+    localStorage.setItem(STORAGE_KEYS.MENU_OVERRIDE, JSON.stringify(overrides));
+    return true;
+  } catch (err) {
+    console.error('Failed to update menu item:', err);
+    return false;
+  }
+}
+
+export async function deleteMenuItem(itemId: string): Promise<boolean> {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.MENU_DELETED);
+    const deletedIds: string[] = raw ? JSON.parse(raw) : [];
+    if (!deletedIds.includes(itemId)) {
+      deletedIds.push(itemId);
+      localStorage.setItem(STORAGE_KEYS.MENU_DELETED, JSON.stringify(deletedIds));
+    }
+    return true;
+  } catch (err) {
+    console.error('Failed to delete menu item:', err);
+    return false;
+  }
 }
 
 export async function updateMenuItemAvailability(itemId: string, isAvailable: boolean): Promise<boolean> {
-  if (isSupabaseConfigured && supabase) {
-    try {
-      const { error } = await supabase
-        .from('menu_items')
-        .update({ is_available: isAvailable, updated_at: new Date().toISOString() })
-        .eq('id', itemId);
-      if (!error) return true;
-    } catch (err) {
-      console.error('Supabase item update failed:', err);
-    }
-  }
-
-  // Local storage override
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.MENU_OVERRIDE);
     const overrides: Record<string, Partial<MenuItem>> = raw ? JSON.parse(raw) : {};
@@ -89,18 +269,6 @@ export async function updateMenuItemAvailability(itemId: string, isAvailable: bo
 }
 
 export async function updateMenuItemPrice(itemId: string, newPrice: number): Promise<boolean> {
-  if (isSupabaseConfigured && supabase) {
-    try {
-      const { error } = await supabase
-        .from('menu_items')
-        .update({ base_price: newPrice, updated_at: new Date().toISOString() })
-        .eq('id', itemId);
-      if (!error) return true;
-    } catch (err) {
-      console.error('Supabase price update failed:', err);
-    }
-  }
-
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.MENU_OVERRIDE);
     const overrides: Record<string, Partial<MenuItem>> = raw ? JSON.parse(raw) : {};
@@ -118,52 +286,6 @@ export async function updateMenuItemPrice(itemId: string, newPrice: number): Pro
 // ====================================================
 
 export async function loadCustomerProfile(phone?: string): Promise<CustomerProfile | null> {
-  if (isSupabaseConfigured && supabase && phone) {
-    try {
-      const { data: profileData, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('verified_phone', phone)
-        .maybeSingle();
-
-      if (!error && profileData) {
-        // Fetch addresses
-        const { data: addressesData } = await supabase
-          .from('customer_addresses')
-          .select('*')
-          .eq('customer_id', profileData.id);
-
-        const addresses: CustomerAddress[] = (addressesData || []).map((a: any) => ({
-          id: a.id,
-          tag: a.tag || 'Home',
-          houseNo: a.house_no || '',
-          street: a.street || '',
-          area: a.area || '',
-          city: a.city || '',
-          state: a.state || '',
-          pincode: a.pincode || '',
-          landmark: a.landmark || '',
-          deliveryInstructions: a.delivery_instructions || '',
-          isDefault: a.is_default || false,
-        }));
-
-        return {
-          id: profileData.id,
-          fullName: profileData.full_name || '',
-          phone: profileData.verified_phone,
-          email: profileData.email || '',
-          addresses,
-          defaultAddressId: addresses.find(a => a.isDefault)?.id || addresses[0]?.id,
-          isVerified: true,
-          verifiedAt: profileData.updated_at,
-        };
-      }
-    } catch (err) {
-      console.warn('Supabase profile load fallback:', err);
-    }
-  }
-
-  // Local storage fallback
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.PROFILE);
     if (raw) {
@@ -175,178 +297,37 @@ export async function loadCustomerProfile(phone?: string): Promise<CustomerProfi
   } catch (err) {
     console.error('Failed reading local profile', err);
   }
-
   return null;
 }
 
 export async function saveCustomerProfile(profile: CustomerProfile): Promise<boolean> {
-  // Always update local storage for immediate persistence
   try {
     localStorage.setItem(STORAGE_KEYS.PROFILE, JSON.stringify(profile));
+    return true;
   } catch (err) {
     console.error('Failed saving profile locally', err);
+    return false;
   }
-
-  if (isSupabaseConfigured && supabase && profile.isVerified) {
-    try {
-      // Upsert profile
-      const { data: prof, error: profError } = await supabase
-        .from('profiles')
-        .upsert({
-          id: profile.id,
-          full_name: profile.fullName,
-          verified_phone: profile.phone,
-          email: profile.email || null,
-          updated_at: new Date().toISOString(),
-        })
-        .select()
-        .single();
-
-      if (!profError && prof) {
-        // Save addresses
-        for (const addr of profile.addresses) {
-          await supabase.from('customer_addresses').upsert({
-            id: addr.id,
-            customer_id: prof.id,
-            tag: addr.tag,
-            house_no: addr.houseNo,
-            street: addr.street,
-            area: addr.area,
-            city: addr.city,
-            state: addr.state,
-            pincode: addr.pincode,
-            landmark: addr.landmark || null,
-            delivery_instructions: addr.deliveryInstructions || null,
-            is_default: addr.isDefault,
-          });
-        }
-      }
-    } catch (err) {
-      console.warn('Supabase profile upsert error:', err);
-    }
-  }
-
-  return true;
 }
 
 // ====================================================
-// ORDERS & ORDER HISTORY
+// ORDERS & REAL-TIME ADMIN ORDER DASHBOARD
 // ====================================================
 
 export async function saveOrder(order: OrderRecord): Promise<boolean> {
-  // 1. Save to local storage list
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.ORDERS);
     const existingOrders: OrderRecord[] = raw ? JSON.parse(raw) : [];
-    // Prepend new order
     const updated = [order, ...existingOrders.filter(o => o.id !== order.id)];
     localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(updated));
+    return true;
   } catch (err) {
     console.error('Failed saving order locally', err);
+    return false;
   }
-
-  // 2. Save to Supabase if configured
-  if (isSupabaseConfigured && supabase) {
-    try {
-      const { error: orderError } = await supabase.from('orders').insert({
-        id: order.id,
-        order_reference: order.orderReference,
-        customer_id: order.customerId || null,
-        customer_name_snapshot: order.customerName,
-        customer_phone_snapshot: order.customerPhone,
-        delivery_address_snapshot: order.deliveryAddress,
-        delivery_instructions: order.deliveryInstructions || null,
-        subtotal: order.pricing.subtotal,
-        additional_charges: order.pricing.deliveryCharge + order.pricing.packagingCharge,
-        discount: order.pricing.discount,
-        total: order.pricing.finalTotal,
-        payment_preference: order.paymentPreference,
-        status: order.status,
-        whatsapp_submission_status: order.whatsappSubmissionStatus,
-        created_at: order.createdAt,
-      });
-
-      if (!orderError) {
-        // Insert order items
-        const orderItemInserts = order.items.map(item => ({
-          order_id: order.id,
-          menu_item_id: item.menuItemId,
-          item_name_snapshot: item.name,
-          selected_variant: item.selectedVariant || null,
-          selected_addons: item.selectedAddons || null,
-          quantity: item.quantity,
-          unit_price_snapshot: item.unitPrice,
-          line_total: item.unitPrice * item.quantity,
-        }));
-
-        await supabase.from('order_items').insert(orderItemInserts);
-      }
-    } catch (err) {
-      console.warn('Supabase saveOrder error:', err);
-    }
-  }
-
-  return true;
 }
 
 export async function fetchCustomerOrders(phone?: string): Promise<OrderRecord[]> {
-  // If Supabase configured and phone provided
-  if (isSupabaseConfigured && supabase && phone) {
-    try {
-      const { data, error } = await supabase
-        .from('orders')
-        .select(`
-          *,
-          order_items (*)
-        `)
-        .eq('customer_phone_snapshot', phone)
-        .order('created_at', { ascending: false });
-
-      if (!error && data && data.length > 0) {
-        return data.map((o: any) => ({
-          id: o.id,
-          orderReference: o.order_reference,
-          createdAt: o.created_at,
-          updatedAt: o.updated_at || o.created_at,
-          customerId: o.customer_id,
-          customerName: o.customer_name_snapshot,
-          customerPhone: o.customer_phone_snapshot,
-          deliveryAddress: o.delivery_address_snapshot,
-          deliveryInstructions: o.delivery_instructions,
-          items: (o.order_items || []).map((oi: any) => ({
-            id: oi.id,
-            menuItemId: oi.menu_item_id,
-            name: oi.item_name_snapshot,
-            image: '',
-            dietary: 'veg',
-            selectedVariant: oi.selected_variant,
-            selectedAddons: oi.selected_addons,
-            unitPrice: oi.unit_price_snapshot,
-            quantity: oi.quantity,
-          })),
-          pricing: {
-            subtotal: o.subtotal,
-            packagingCharge: 0,
-            deliveryCharge: o.additional_charges,
-            tax: 0,
-            discount: o.discount || 0,
-            finalTotal: o.total,
-            isFreeDelivery: o.additional_charges === 0,
-            freeDeliveryThreshold: 299,
-            amountNeededForFreeDelivery: 0,
-          },
-          paymentPreference: o.payment_preference || 'Cash on Delivery',
-          status: o.status as OrderStatus,
-          whatsappMessage: '',
-          whatsappSubmissionStatus: o.whatsapp_submission_status || 'opened',
-        }));
-      }
-    } catch (err) {
-      console.warn('Supabase fetch orders fallback:', err);
-    }
-  }
-
-  // Local storage fallback
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.ORDERS);
     if (raw) {
@@ -357,99 +338,30 @@ export async function fetchCustomerOrders(phone?: string): Promise<OrderRecord[]
   } catch (err) {
     console.error('Failed reading local orders', err);
   }
-
   return [];
 }
 
 export async function fetchAllOrdersForAdmin(): Promise<OrderRecord[]> {
-  if (isSupabaseConfigured && supabase) {
-    try {
-      const { data, error } = await supabase
-        .from('orders')
-        .select(`
-          *,
-          order_items (*)
-        `)
-        .order('created_at', { ascending: false });
-
-      if (!error && data && data.length > 0) {
-        return data.map((o: any) => ({
-          id: o.id,
-          orderReference: o.order_reference,
-          createdAt: o.created_at,
-          updatedAt: o.updated_at || o.created_at,
-          customerId: o.customer_id,
-          customerName: o.customer_name_snapshot,
-          customerPhone: o.customer_phone_snapshot,
-          deliveryAddress: o.delivery_address_snapshot,
-          deliveryInstructions: o.delivery_instructions,
-          items: (o.order_items || []).map((oi: any) => ({
-            id: oi.id,
-            menuItemId: oi.menu_item_id,
-            name: oi.item_name_snapshot,
-            image: '',
-            dietary: 'veg',
-            selectedVariant: oi.selected_variant,
-            selectedAddons: oi.selected_addons,
-            unitPrice: oi.unit_price_snapshot,
-            quantity: oi.quantity,
-          })),
-          pricing: {
-            subtotal: o.subtotal,
-            packagingCharge: 0,
-            deliveryCharge: o.additional_charges,
-            tax: 0,
-            discount: o.discount || 0,
-            finalTotal: o.total,
-            isFreeDelivery: o.additional_charges === 0,
-            freeDeliveryThreshold: 299,
-            amountNeededForFreeDelivery: 0,
-          },
-          paymentPreference: o.payment_preference || 'Cash on Delivery',
-          status: o.status as OrderStatus,
-          whatsappMessage: '',
-          whatsappSubmissionStatus: o.whatsapp_submission_status || 'opened',
-        }));
-      }
-    } catch (err) {
-      console.warn('Admin fetch orders fallback:', err);
-    }
-  }
-
-  // Local fallback
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.ORDERS);
     return raw ? JSON.parse(raw) : [];
   } catch (err) {
+    console.error('Failed reading admin orders', err);
     return [];
   }
 }
 
 export async function updateOrderStatus(orderId: string, status: OrderStatus): Promise<boolean> {
-  if (isSupabaseConfigured && supabase) {
-    try {
-      const { error } = await supabase
-        .from('orders')
-        .update({ status, updated_at: new Date().toISOString() })
-        .eq('id', orderId);
-      if (!error) return true;
-    } catch (err) {
-      console.error('Supabase update order status error:', err);
-    }
-  }
-
-  // Local storage update
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.ORDERS);
     if (raw) {
       const orders = JSON.parse(raw) as OrderRecord[];
-      const updated = orders.map(o => o.id === orderId ? { ...o, status, updatedAt: new Date().toISOString() } : o);
+      const updated = orders.map(o => (o.id === orderId ? { ...o, status, updatedAt: new Date().toISOString() } : o));
       localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(updated));
       return true;
     }
   } catch (err) {
     console.error('Failed to update local order status', err);
   }
-
   return false;
 }

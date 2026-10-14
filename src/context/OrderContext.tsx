@@ -131,14 +131,10 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     // Clear cart
     clearCart();
 
-    // Show success modal
+    // Show success modal with live order tracking
     setIsSuccessModalOpen(true);
 
-    // Open WhatsApp
-    const waUrl = getWhatsAppOrderUrl(newOrder);
-    window.open(waUrl, '_blank', 'noopener,noreferrer');
-
-    showToast('Order saved! Opening WhatsApp...', 'success');
+    showToast('Order placed successfully! Kitchen received your order.', 'success');
     return newOrder;
   };
 

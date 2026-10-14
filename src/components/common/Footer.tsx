@@ -2,11 +2,22 @@ import React from 'react';
 import { Phone, MapPin, Clock } from 'lucide-react';
 import { RESTAURANT_CONFIG } from '../../config/restaurant';
 
+import { RestaurantSettings } from '../../types/settings';
+
 interface FooterProps {
   onOpenAdmin?: () => void;
+  settings?: RestaurantSettings;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenAdmin }) => {
+export const Footer: React.FC<FooterProps> = ({ onOpenAdmin, settings }) => {
+  const storeName = settings?.name || RESTAURANT_CONFIG.name;
+  const storeTagline = settings?.tagline || RESTAURANT_CONFIG.tagline;
+  const storePhone = settings?.contactPhone || RESTAURANT_CONFIG.displayPhone;
+  const storeHours = settings?.operatingHours || RESTAURANT_CONFIG.operatingHours;
+  const storeCity = settings?.city || RESTAURANT_CONFIG.city;
+  const freeThreshold = settings?.freeDeliveryThreshold || RESTAURANT_CONFIG.freeDeliveryThreshold;
+  const minOrder = settings?.minOrderAmount || RESTAURANT_CONFIG.minOrderAmount;
+
   return (
     <footer className="bg-gray-900 border-t border-gray-800 mt-12 pb-28 md:pb-0">
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6 py-10">
@@ -18,12 +29,12 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdmin }) => {
                 <span className="text-white font-black text-base">M</span>
               </div>
               <div>
-                <div className="text-base font-extrabold text-white">Moonlight Kitchen</div>
+                <div className="text-base font-extrabold text-white">{storeName}</div>
                 <div className="text-xs text-gray-500">Cloud Kitchen · Fast Delivery</div>
               </div>
             </div>
             <p className="text-xs text-gray-500 leading-relaxed max-w-xs">
-              {RESTAURANT_CONFIG.tagline}. Fresh, flavourful, and delivered to your door every day.
+              {storeTagline}. Fresh, flavourful, and delivered to your door every day.
             </p>
           </div>
 
@@ -38,15 +49,15 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdmin }) => {
                 className="flex items-center gap-2 hover:text-amber-400 transition-colors"
               >
                 <Phone className="w-3.5 h-3.5" />
-                WhatsApp: {RESTAURANT_CONFIG.displayPhone}
+                Phone: {storePhone}
               </a>
               <div className="flex items-center gap-2">
                 <Clock className="w-3.5 h-3.5" />
-                {RESTAURANT_CONFIG.operatingHours}
+                {storeHours}
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="w-3.5 h-3.5" />
-                {RESTAURANT_CONFIG.city}
+                {storeCity}
               </div>
             </div>
           </div>

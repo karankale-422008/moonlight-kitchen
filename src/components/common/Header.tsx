@@ -17,6 +17,8 @@ import { useOrder } from '../../context/OrderContext';
 import { RESTAURANT_CONFIG } from '../../config/restaurant';
 import { formatINR } from '../../lib/pricing';
 
+import { RestaurantSettings } from '../../types/settings';
+
 interface HeaderProps {
   onOpenSearch: () => void;
   onOpenAdmin: () => void;
@@ -24,6 +26,7 @@ interface HeaderProps {
   searchQuery: string;
   onSearchChange: (q: string) => void;
   onCloseSearch: () => void;
+  settings?: RestaurantSettings;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -33,6 +36,7 @@ export const Header: React.FC<HeaderProps> = ({
   searchQuery,
   onSearchChange,
   onCloseSearch,
+  settings,
 }) => {
   const { totalItemCount, pricing, setIsCartOpen } = useCart();
   const { profile, isVerified, activeAddress, setIsAuthModalOpen, setIsProfileModalOpen } = useCustomer();
@@ -43,15 +47,19 @@ export const Header: React.FC<HeaderProps> = ({
     else setIsAuthModalOpen(true);
   };
 
+  const storeName = settings?.name || RESTAURANT_CONFIG.name;
+  const promoText = settings?.promoBannerText || `FREE delivery on orders above ₹${RESTAURANT_CONFIG.freeDeliveryThreshold} • Use code MOONLIGHT10 for 10% off`;
+  const storeHours = settings?.operatingHours || RESTAURANT_CONFIG.operatingHours;
+
   return (
     <header className="sticky top-0 z-40 border-b border-gray-800/80 glass">
       {/* Promo Stripe */}
       <div className="bg-amber-500/10 border-b border-amber-500/20 text-amber-300 text-[11px] px-4 py-1.5 flex items-center justify-center gap-3 font-medium">
         <Zap className="w-3 h-3 fill-current shrink-0" />
-        <span>FREE delivery on orders above ₹{RESTAURANT_CONFIG.freeDeliveryThreshold} • Use code <strong className="text-amber-200">MOONLIGHT10</strong> for 10% off</span>
+        <span>{promoText}</span>
         <span className="hidden sm:flex items-center gap-1 text-gray-400">
           <Clock className="w-3 h-3" />
-          {RESTAURANT_CONFIG.operatingHours}
+          {storeHours}
         </span>
       </div>
 
@@ -67,7 +75,13 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
           <div className="hidden sm:block">
             <div className="text-base font-extrabold text-white tracking-tight leading-none">
-              Moonlight <span className="text-amber-400">Kitchen</span>
+              {storeName.includes(' ') ? (
+                <>
+                  {storeName.split(' ')[0]} <span className="text-amber-400">{storeName.split(' ').slice(1).join(' ')}</span>
+                </>
+              ) : (
+                <span className="text-amber-400">{storeName}</span>
+              )}
             </div>
             <div className="text-[10px] text-gray-500 font-medium tracking-widest uppercase mt-0.5">
               Cloud Kitchen

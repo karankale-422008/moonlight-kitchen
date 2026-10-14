@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Header } from './components/common/Header';
 import { Footer } from './components/common/Footer';
-import { HeroBanner } from './components/common/HeroBanner';
+import { BannerSlider } from './components/common/BannerSlider';
 import { MobileBottomBar } from './components/common/MobileBottomBar';
 import { CategoryNav } from './components/menu/CategoryNav';
 import { SearchAndFilters } from './components/menu/SearchAndFilters';
@@ -22,8 +22,16 @@ import { CustomerProvider, useCustomer } from './context/CustomerContext';
 import { OrderProvider, useOrder } from './context/OrderContext';
 
 import { MenuItem, DietaryType } from './types/menu';
+import { BannerItem } from './types/banner';
+import { RestaurantSettings } from './types/settings';
 import { MENU_CATEGORIES } from './data/menu';
-import { fetchMenuItems } from './lib/storage';
+import {
+  fetchMenuItems,
+  fetchBanners,
+  fetchRestaurantSettings,
+  DEFAULT_BANNERS,
+  DEFAULT_SETTINGS
+} from './lib/storage';
 import { Utensils, Flame } from 'lucide-react';
 
 const CATEGORY_EMOJIS: Record<string, string> = {
@@ -38,6 +46,8 @@ const MainApp: React.FC = () => {
   const { setIsAuthModalOpen, setIsProfileModalOpen } = useCustomer();
 
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [banners, setBanners] = useState<BannerItem[]>(DEFAULT_BANNERS);
+  const [settings, setSettings] = useState<RestaurantSettings>(DEFAULT_SETTINGS);
   const [isLoadingMenu, setIsLoadingMenu] = useState(true);
 
   // Default is 'bestsellers' — not 'all'
@@ -63,7 +73,23 @@ const MainApp: React.FC = () => {
     }
   };
 
-  useEffect(() => { loadMenu(); }, []);
+  const loadInitialData = async () => {
+    try {
+      const [loadedBanners, loadedSettings] = await Promise.all([
+        fetchBanners(),
+        fetchRestaurantSettings(),
+      ]);
+      setBanners(loadedBanners);
+      setSettings(loadedSettings);
+    } catch (err) {
+      console.error('Failed to load store settings / banners:', err);
+    }
+  };
+
+  useEffect(() => {
+    loadMenu();
+    loadInitialData();
+  }, []);
 
   // '/' key opens search
   useEffect(() => {
@@ -145,6 +171,8 @@ const MainApp: React.FC = () => {
       <AdminPage
         onClose={() => setIsAdminOpen(false)}
         onMenuUpdated={loadMenu}
+        onSettingsUpdated={setSettings}
+        onBannersUpdated={setBanners}
       />
     );
   }
@@ -159,6 +187,7 @@ const MainApp: React.FC = () => {
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         onCloseSearch={() => setIsSearchOpen(false)}
+        settings={settings}
       />
 
       {/* Main Layout */}
@@ -166,8 +195,13 @@ const MainApp: React.FC = () => {
         <div className="flex gap-6 items-start">
           {/* Content */}
           <div className="flex-1 min-w-0">
-            {/* Hero Banner */}
-            <HeroBanner
+            {/* 5-Slide Interactive Banner Carousel */}
+            <BannerSlider
+              banners={banners}
+              onSelectCategory={(category) => {
+                setActiveCategory(category);
+                document.getElementById('menu-section')?.scrollIntoView({ behavior: 'smooth' });
+              }}
               onExploreClick={() => {
                 document.getElementById('menu-section')?.scrollIntoView({ behavior: 'smooth' });
               }}
@@ -245,7 +279,10 @@ const MainApp: React.FC = () => {
         </div>
       </main>
 
-      <Footer onOpenAdmin={() => setIsAdminOpen(true)} />
+      <Footer
+        onOpenAdmin={() => setIsAdminOpen(true)}
+        settings={settings}
+      />
 
       {/* Mobile Bottom Bar */}
       <MobileBottomBar
