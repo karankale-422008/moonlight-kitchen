@@ -245,7 +245,7 @@ const MainApp: React.FC = () => {
         </div>
       </main>
 
-      <Footer />
+      <Footer onOpenAdmin={() => setIsAdminOpen(true)} />
 
       {/* Mobile Bottom Bar */}
       <MobileBottomBar

@@ -179,13 +179,14 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </button>
 
-          {/* Admin - subtle */}
+          {/* Admin Portal Button */}
           <button
             onClick={onOpenAdmin}
-            className="p-2 text-gray-600 hover:text-gray-400 hover:bg-gray-800 rounded-lg transition-colors"
-            title="Kitchen Admin Portal"
+            className="flex items-center gap-1 px-2.5 py-1.5 text-xs text-amber-400 hover:text-amber-300 hover:bg-amber-500/10 border border-amber-500/20 rounded-xl transition-colors font-semibold"
+            title="Kitchen Admin Dashboard (Passcode: moonlight2026)"
           >
             <Shield className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline text-[11px]">Admin</span>
           </button>
         </div>
       </div>

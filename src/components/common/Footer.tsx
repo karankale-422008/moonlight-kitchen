@@ -2,7 +2,11 @@ import React from 'react';
 import { Phone, MapPin, Clock } from 'lucide-react';
 import { RESTAURANT_CONFIG } from '../../config/restaurant';
 
-export const Footer: React.FC = () => {
+interface FooterProps {
+  onOpenAdmin?: () => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ onOpenAdmin }) => {
   return (
     <footer className="bg-gray-900 border-t border-gray-800 mt-12 pb-28 md:pb-0">
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6 py-10">
@@ -54,6 +58,14 @@ export const Footer: React.FC = () => {
               <p>Free delivery on orders above ₹{RESTAURANT_CONFIG.freeDeliveryThreshold}</p>
               <p>Min order: ₹{RESTAURANT_CONFIG.minOrderAmount}</p>
               <p>Also available on Zomato</p>
+              {onOpenAdmin && (
+                <button
+                  onClick={onOpenAdmin}
+                  className="block text-amber-500/80 hover:text-amber-400 font-semibold transition-colors mt-2"
+                >
+                  🔐 Staff &amp; Admin Dashboard
+                </button>
+              )}
             </div>
           </div>
         </div>
