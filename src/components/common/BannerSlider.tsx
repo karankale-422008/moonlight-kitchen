@@ -62,7 +62,7 @@ export const BannerSlider: React.FC<BannerSliderProps> = ({
       title="Click banner to explore dishes in this category"
     >
       {/* Banner Display Container — Clean visual canvas with NO text overlay */}
-      <div className="relative w-full aspect-[21/9] min-h-[180px] sm:min-h-[240px] md:min-h-[290px] max-h-[380px] overflow-hidden">
+      <div className="relative w-full aspect-[16/9] md:aspect-[21/9] min-h-[180px] sm:min-h-[240px] md:min-h-[280px] max-h-[420px] overflow-hidden">
         {activeBanners.map((banner, index) => {
           const isCurrent = index === currentIndex;
           return (

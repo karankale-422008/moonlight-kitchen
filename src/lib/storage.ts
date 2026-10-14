@@ -13,7 +13,7 @@ const STORAGE_KEYS = {
   MENU_OVERRIDE: 'moonlight_menu_override',
   MENU_ADDED: 'moonlight_added_menu_items',
   MENU_DELETED: 'moonlight_deleted_menu_items',
-  BANNERS: 'moonlight_banner_slides_v3',
+  BANNERS: 'moonlight_banner_slides_v4',
   SETTINGS: 'moonlight_restaurant_settings',
   CART: 'moonlight_cart_items',
 };
