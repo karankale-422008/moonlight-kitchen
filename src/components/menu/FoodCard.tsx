@@ -3,6 +3,7 @@ import { Plus, Minus, Flame, Star } from 'lucide-react';
 import { MenuItem } from '../../types/menu';
 import { formatINR } from '../../lib/pricing';
 import { useCart } from '../../context/CartContext';
+import { FoodImage } from '../common/FoodImage';
 
 interface FoodCardProps {
   item: MenuItem;
@@ -120,19 +121,15 @@ export const FoodCard: React.FC<FoodCardProps> = ({ item, onOpenDetailModal }) =
         <div className="relative w-28 h-28 sm:w-32 sm:h-32 shrink-0">
           {/* Image */}
           <div className="w-full h-full rounded-xl overflow-hidden bg-gray-700 food-img">
-            <img
+            <FoodImage
               src={item.image}
               alt={item.name}
-              loading="lazy"
-              className="w-full h-full object-cover transition-transform duration-300"
-              onError={e => {
-                (e.target as HTMLImageElement).src =
-                  'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=300&q=80';
-              }}
+              category={item.category}
+              className="w-full h-full"
             />
             {/* Sold-out overlay */}
             {!item.isAvailable && (
-              <div className="absolute inset-0 bg-gray-900/70 flex items-center justify-center rounded-xl">
+              <div className="absolute inset-0 bg-gray-900/70 flex items-center justify-center rounded-xl z-10">
                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Sold Out</span>
               </div>
             )}

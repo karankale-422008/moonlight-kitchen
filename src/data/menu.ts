@@ -28,7 +28,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     isBestseller: true,
     description: 'Classic stone-baked pizza topped with aromatic herb tomato sauce and golden bubbling cheese.',
-    image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [
       { id: 'add-cheese', name: 'Extra Cheese', price: 30 },
       { id: 'add-dip', name: 'Cheesy Garlic Dip', price: 20 },
@@ -42,7 +42,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Crisp hand-sliced red onions smothered over melted creamy mozzarella cheese.',
-    image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [
       { id: 'add-cheese', name: 'Extra Cheese', price: 30 },
       { id: 'add-dip', name: 'Cheesy Garlic Dip', price: 20 },
@@ -56,7 +56,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Crunchy farm-fresh green bell peppers generously topped with melted mozzarella cheese.',
-    image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [
       { id: 'add-cheese', name: 'Extra Cheese', price: 30 },
       { id: 'add-dip', name: 'Cheesy Garlic Dip', price: 20 },
@@ -71,7 +71,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     isBestseller: true,
     description: 'Juicy American sweet corn kernels baked into a molten cheese layer.',
-    image: 'https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [
       { id: 'add-cheese', name: 'Extra Cheese', price: 30 },
       { id: 'add-dip', name: 'Cheesy Garlic Dip', price: 20 },
@@ -85,7 +85,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Delicious medley of crisp onions, bell peppers, tomatoes, and golden sweet corn in melted cheese.',
-    image: 'https://images.unsplash.com/photo-1594007654729-407eedc4be65?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1594007654729-407eedc4be65?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [
       { id: 'add-cheese', name: 'Extra Cheese', price: 30 },
       { id: 'add-dip', name: 'Cheesy Garlic Dip', price: 20 },
@@ -99,7 +99,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Garden paradise blend of fresh veggies, black olives, sweet corn, and heavy mozzarella.',
-    image: 'https://images.unsplash.com/photo-1604382355076-af4b0eb60143?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1604382355076-af4b0eb60143?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [
       { id: 'add-cheese', name: 'Extra Cheese', price: 30 },
       { id: 'add-dip', name: 'Cheesy Garlic Dip', price: 20 },
@@ -114,7 +114,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     isBestseller: true,
     description: 'Crust loaded with hot liquid cheese that bursts with every bite, topped with farm vegetables.',
-    image: 'https://images.unsplash.com/photo-1544982503-9f984c14501a?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1544982503-9f984c14501a?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [
       { id: 'add-cheese', name: 'Extra Cheese', price: 30 },
       { id: 'add-dip', name: 'Cheesy Garlic Dip', price: 20 },
@@ -128,7 +128,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Tender spiced paneer cubes baked over our signature sauce and stretchy mozzarella cheese.',
-    image: 'https://images.unsplash.com/photo-1573821663912-569905455b1c?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1573821663912-569905455b1c?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [
       { id: 'add-cheese', name: 'Extra Cheese', price: 30 },
       { id: 'add-dip', name: 'Cheesy Garlic Dip', price: 20 },
@@ -142,7 +142,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Sweet corn and succulent paneer chunks balanced with rich melted cheese and herbs.',
-    image: 'https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [
       { id: 'add-cheese', name: 'Extra Cheese', price: 30 },
       { id: 'add-dip', name: 'Cheesy Garlic Dip', price: 20 },
@@ -157,7 +157,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     isBestseller: true,
     description: 'Liquid cheese explosion crust loaded with marinated cottage cheese cubes and seasoning.',
-    image: 'https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [
       { id: 'add-cheese', name: 'Extra Cheese', price: 30 },
       { id: 'add-dip', name: 'Cheesy Garlic Dip', price: 20 },
@@ -171,7 +171,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Smoky clay-oven tandoori marinated paneer with capsicum, onion, and roasted tandoori drizzle.',
-    image: 'https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [
       { id: 'add-cheese', name: 'Extra Cheese', price: 30 },
       { id: 'add-dip', name: 'Cheesy Garlic Dip', price: 20 },
@@ -189,7 +189,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Crispy spiced potato and herb patty topped with lettuce, sliced onions, tomatoes, and house mayo.',
-    image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [
       { id: 'add-cheese-slice', name: 'Extra Cheese Slice', price: 20 },
       { id: 'add-fries-side', name: 'Add Small Fries', price: 39 },
@@ -204,7 +204,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     isBestseller: true,
     description: 'Crisp golden veggie patty layered with melted cheddar cheese slice and creamy signature sauces.',
-    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [
       { id: 'add-cheese-slice', name: 'Extra Cheese Slice', price: 20 },
       { id: 'add-fries-side', name: 'Add Small Fries', price: 39 },
@@ -222,7 +222,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Fresh sandwich bread spread with spicy mint coriander chutney and thick layer of cheese.',
-    image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=75&auto=format',
   },
   {
     id: 'sdw-2',
@@ -233,7 +233,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     isBestseller: true,
     description: 'Buttered and grilled crisp with spicy green chutney and gooey melted cheese.',
-    image: 'https://images.unsplash.com/photo-1528736235302-52922df5c122?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1528736235302-52922df5c122?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [{ id: 'add-cheese', name: 'Extra Cheese', price: 25 }],
   },
   {
@@ -244,7 +244,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Double-decker cold sandwich layered with cucumber, tomato, potato, beet, and herb spread.',
-    image: 'https://images.unsplash.com/photo-1539252554453-80ab65ce3586?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1539252554453-80ab65ce3586?auto=format&fit=crop&w=400&q=75&auto=format',
   },
   {
     id: 'sdw-4',
@@ -254,7 +254,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Triple-layer sandwich stuffed with spiced vegetables, grilled crisp with butter and chaat masala.',
-    image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [{ id: 'add-cheese', name: 'Extra Cheese', price: 25 }],
   },
   {
@@ -266,7 +266,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     isBestseller: true,
     description: 'Loaded with sweet golden corn kernels and generous cheese, pressed and grilled to perfection.',
-    image: 'https://images.unsplash.com/photo-1619096252214-ef06c45683e3?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1619096252214-ef06c45683e3?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [{ id: 'add-cheese', name: 'Extra Cheese', price: 25 }],
   },
 
@@ -282,7 +282,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     isBestseller: true,
     description: 'Jumbo 3-tier Mumbai street classic loaded with potato masala, onions, capsicum, chutney and cheese.',
-    image: 'https://images.unsplash.com/photo-1509722747041-616f39b57569?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1509722747041-616f39b57569?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [{ id: 'add-cheese', name: 'Extra Cheese', price: 25 }],
   },
   {
@@ -293,7 +293,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Giant jumbo sandwich layered with fresh garden veggies, creamy mayonnaise, and molten cheese.',
-    image: 'https://images.unsplash.com/photo-1567234669003-dce7a7a88821?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1567234669003-dce7a7a88821?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [{ id: 'add-cheese', name: 'Extra Cheese', price: 25 }],
   },
   {
@@ -305,7 +305,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     isBestseller: true,
     description: 'Overstuffed jumbo bread filled with tender paneer cubes, sweet corn, melted mozzarella and tandoori spices.',
-    image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [{ id: 'add-cheese', name: 'Extra Cheese', price: 25 }],
   },
 
@@ -320,7 +320,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Crispy golden potato French fries tossed with sea salt.',
-    image: 'https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [{ id: 'add-dip', name: 'Cheesy Dip', price: 20 }],
   },
   {
@@ -331,7 +331,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Healthier guilt-free air-fried crispy fries tossed with light salt, cooked with zero oil.',
-    image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [{ id: 'add-dip', name: 'Cheesy Dip', price: 20 }],
   },
   {
@@ -343,7 +343,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     isBestseller: true,
     description: 'Crispy fries tossed in our signature zesty and fiery African peri peri spice mix.',
-    image: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [{ id: 'add-dip', name: 'Cheesy Dip', price: 20 }],
   },
   {
@@ -354,7 +354,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Zero oil air-crisped potato fries dusted with tangy, spicy peri peri seasoning.',
-    image: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [{ id: 'add-dip', name: 'Cheesy Dip', price: 20 }],
   },
   {
@@ -366,7 +366,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     isBestseller: true,
     description: 'Golden fries smothered with a generous ladle of warm creamy cheddar cheese sauce.',
-    image: 'https://images.unsplash.com/photo-1585109649139-366815a0d713?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1585109649139-366815a0d713?auto=format&fit=crop&w=400&q=75&auto=format',
   },
   {
     id: 'frs-6',
@@ -376,7 +376,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Oil-free air-fried fries topped with rich melted velvety cheese sauce.',
-    image: 'https://images.unsplash.com/photo-1585109649139-366815a0d713?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1585109649139-366815a0d713?auto=format&fit=crop&w=400&q=75&auto=format',
   },
   {
     id: 'frs-7',
@@ -386,7 +386,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Crispy fries flavored with smoky Punjabi tandoori seasoning and spicy drizzle.',
-    image: 'https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?auto=format&fit=crop&w=400&q=75&auto=format',
   },
   {
     id: 'frs-8',
@@ -396,7 +396,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Healthy zero-oil air-roasted fries coated with fragrant tandoori spice blend.',
-    image: 'https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?auto=format&fit=crop&w=400&q=75&auto=format',
   },
   {
     id: 'frs-9',
@@ -407,7 +407,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     isBestseller: true,
     description: 'Double indulgence: smoky tandoori sauce combined with melted creamy cheese sauce.',
-    image: 'https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=400&q=75&auto=format',
   },
   {
     id: 'frs-10',
@@ -417,7 +417,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Oil-free crispy fries drenched in rich cheese and smoky tandoori spices.',
-    image: 'https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=400&q=75&auto=format',
   },
 
   // ==========================================
@@ -431,7 +431,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Classic hot and soupy comforting 2-minute Maggi noodles with original taste.',
-    image: 'https://images.unsplash.com/photo-1612927601601-6638404737ce?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1612927601601-6638404737ce?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [{ id: 'add-cheese', name: 'Extra Cheese', price: 20 }],
   },
   {
@@ -442,7 +442,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Classic Maggi noodles crowned with grated processed cheese melted into the broth.',
-    image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [{ id: 'add-cheese', name: 'Extra Cheese', price: 20 }],
   },
   {
@@ -454,7 +454,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     isBestseller: true,
     description: 'Street-style spicy noodles with double tastemaker, butter, and authentic Indian herbs.',
-    image: 'https://images.unsplash.com/photo-1612927601601-6638404737ce?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1612927601601-6638404737ce?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [{ id: 'add-cheese', name: 'Extra Cheese', price: 20 }],
   },
   {
@@ -466,7 +466,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     isBestseller: true,
     description: 'Spicy masala noodles loaded with molten cheese for the ultimate creamy indulgence.',
-    image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [{ id: 'add-cheese', name: 'Extra Cheese', price: 20 }],
   },
   {
@@ -477,7 +477,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Noodles tossed with sauteed green peas, carrots, crunchy onions, and capsicum.',
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [{ id: 'add-cheese', name: 'Extra Cheese', price: 20 }],
   },
   {
@@ -488,7 +488,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Farm-fresh vegetables and masala noodles topped with an abundant heap of melted cheese.',
-    image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=400&q=75&auto=format',
     addons: [{ id: 'add-cheese', name: 'Extra Cheese', price: 20 }],
   },
 
@@ -503,7 +503,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Chilled hand-beaten coffee blended with creamy milk and balanced sweetness.',
-    image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=400&q=75&auto=format',
   },
   {
     id: 'bev-2',
@@ -514,7 +514,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     isBestseller: true,
     description: 'Rich, thick, cafe-style cold coffee made with dairy cream and dark roasted coffee.',
-    image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=400&q=75&auto=format',
   },
   {
     id: 'bev-3',
@@ -524,7 +524,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Thick chocolate milkshake blended with crispy KitKat wafers and chocolate drizzle.',
-    image: 'https://images.unsplash.com/photo-1579954115563-e72bf1381629?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1579954115563-e72bf1381629?auto=format&fit=crop&w=400&q=75&auto=format',
   },
   {
     id: 'bev-4',
@@ -535,7 +535,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     isBestseller: true,
     description: 'Creamy vanilla shake blended with real crunchy Oreo cookie crumbles and cocoa sauce.',
-    image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=400&q=75&auto=format',
   },
   {
     id: 'bev-5',
@@ -545,7 +545,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Sparkling green apple mocktail infused with crushed mint leaves, fresh lime, and soda.',
-    image: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=400&q=75&auto=format',
   },
   {
     id: 'bev-6',
@@ -556,7 +556,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     isBestseller: true,
     description: 'Zesty cooling cocktail of muddled garden mint, tangy lemon wedges, and chilled sparkling soda.',
-    image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=400&q=75&auto=format',
   },
   {
     id: 'bev-7',
@@ -566,7 +566,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Sweet and fruity watermelon cooler with hints of fresh mint, rock salt, and sparkling bubbles.',
-    image: 'https://images.unsplash.com/photo-1556881286-fc6915169721?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1556881286-fc6915169721?auto=format&fit=crop&w=400&q=75&auto=format',
   },
   {
     id: 'bev-8',
@@ -576,7 +576,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Exotic citrus blue curacao mocktail served over ice with fresh lime juice and fizz.',
-    image: 'https://images.unsplash.com/photo-1536935338788-846bb9981813?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1536935338788-846bb9981813?auto=format&fit=crop&w=400&q=75&auto=format',
   },
 
   // ==========================================
@@ -591,7 +591,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     isBestseller: true,
     description: 'Royal long-grain basmati rice layered with succulent chicken pieces, slow-cooked in Hyderabadi dum masala.',
-    image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=400&q=75&auto=format',
     variants: [
       { id: 'half', name: 'Half (H)', price: 130 },
       { id: 'full', name: 'Full (F)', price: 170 },
@@ -609,7 +609,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'non-veg',
     isAvailable: true,
     description: 'Fragrant dum rice topped with smoky charred tandoori chicken pieces seasoned with whole spices.',
-    image: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=400&q=75&auto=format',
     variants: [
       { id: 'half', name: 'Half (H)', price: 140 },
       { id: 'full', name: 'Full (F)', price: 180 },
@@ -627,7 +627,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'non-veg',
     isAvailable: true,
     description: 'Aromatic Awadhi style delicately spiced chicken dum biryani infused with saffron and kewra.',
-    image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=400&q=75&auto=format',
     variants: [
       { id: 'half', name: 'Half (H)', price: 150 },
       { id: 'full', name: 'Full (F)', price: 190 },
@@ -645,7 +645,7 @@ export const MENU_ITEMS: MenuItem[] = [
     dietary: 'veg',
     isAvailable: true,
     description: 'Garden vegetables, fresh paneer cubes, and saffron-scented basmati rice sealed and dum-cooked.',
-    image: 'https://images.unsplash.com/photo-1642821373181-696a54913e93?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1642821373181-696a54913e93?auto=format&fit=crop&w=400&q=75&auto=format',
     variants: [
       { id: 'half', name: 'Half (H)', price: 110 },
       { id: 'full', name: 'Full (F)', price: 150 },
@@ -668,7 +668,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isBestseller: true,
     description: 'Pocket-friendly snack pair: Crispy Veg Burger served with a hot Salted Fries Bowl.',
     comboItems: ['Veg Burger', 'Salted Fries Bowl'],
-    image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=400&q=75&auto=format',
   },
   {
     id: 'spc-2',
@@ -679,7 +679,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     description: 'Refreshing treat: Crispy Veg Burger paired with a chilled fizzy Mint Mojito.',
     comboItems: ['Veg Burger', 'Mint Mojito'],
-    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=75&auto=format',
   },
   {
     id: 'spc-3',
@@ -690,7 +690,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     description: 'Cafe favorite: Toasted Cheese Corn Grill Sandwich with Regular Cold Coffee.',
     comboItems: ['Cheese Corn Grill Sandwich', 'Regular Cold Coffee'],
-    image: 'https://images.unsplash.com/photo-1528736235302-52922df5c122?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1528736235302-52922df5c122?auto=format&fit=crop&w=400&q=75&auto=format',
   },
   {
     id: 'spc-4',
@@ -701,7 +701,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     description: 'Late night craving combo: Spicy Masala Maggi paired with an ice-cold Mint Mojito.',
     comboItems: ['Masala Maggi', 'Mint Mojito'],
-    image: 'https://images.unsplash.com/photo-1612927601601-6638404737ce?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1612927601601-6638404737ce?auto=format&fit=crop&w=400&q=75&auto=format',
   },
   {
     id: 'spc-5',
@@ -713,7 +713,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isBestseller: true,
     description: 'Mouthwatering snack meal: Veg Cheese Burger accompanied by chilled Regular Cold Coffee.',
     comboItems: ['Veg Cheese Burger', 'Regular Cold Coffee'],
-    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=75&auto=format',
   },
   {
     id: 'spc-6',
@@ -725,7 +725,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isBestseller: true,
     description: 'Complete non-veg feast: Fragrant Hyderabadi Chicken Dum Biryani (Half) + chilled Mint Mojito.',
     comboItems: ['Hyderabadi Chicken Dum Biryani (Half)', 'Mint Mojito'],
-    image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=400&q=75&auto=format',
   },
 
   // ==========================================
@@ -740,7 +740,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     description: 'Trio feast: Plain Cheese Margarita Pizza + Salted Fries + Mint Mojito.',
     comboItems: ['Plain Cheese Margarita Pizza', 'Salted Fries', 'Mint Mojito'],
-    image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=400&q=75&auto=format',
   },
   {
     id: 'pfd-2',
@@ -751,7 +751,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     description: 'Gourmet meal: Onion Cheese Pizza + Salted Fries + Green Apple Mojito.',
     comboItems: ['Onion Cheese Pizza', 'Salted Fries', 'Green Apple Mojito'],
-    image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=400&q=75&auto=format',
   },
   {
     id: 'pfd-3',
@@ -763,7 +763,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isBestseller: true,
     description: 'Kitchen flagship: Mix Veg Cheese Pizza + Salted Fries + Blue Lagoon Mojito.',
     comboItems: ['Mix Veg Cheese Pizza', 'Salted Fries', 'Blue Lagoon Mojito'],
-    image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=75&auto=format',
   },
 
   // ==========================================
@@ -778,7 +778,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     description: 'Full starter meal: Veg Burger + Salted Fries + Regular Cold Coffee.',
     comboItems: ['Veg Burger', 'Salted Fries', 'Regular Cold Coffee'],
-    image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=400&q=75&auto=format',
   },
   {
     id: 'bfd-5',
@@ -789,7 +789,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isAvailable: true,
     description: 'Cheesy satisfaction: Veg Cheese Burger + Salted Fries + Special Thick Cold Coffee.',
     comboItems: ['Veg Cheese Burger', 'Salted Fries', 'Special Thick Cold Coffee'],
-    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=75&auto=format',
   },
   {
     id: 'bfd-6',
@@ -801,6 +801,6 @@ export const MENU_ITEMS: MenuItem[] = [
     isBestseller: true,
     description: 'The ultimate burger feast: Veg Cheese Burger + Cheese Fries + Green Apple Mojito.',
     comboItems: ['Veg Cheese Burger', 'Cheese Fries', 'Green Apple Mojito'],
-    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=75&auto=format',
   },
 ];

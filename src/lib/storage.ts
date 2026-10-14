@@ -18,56 +18,12 @@ const STORAGE_KEYS = {
   CART: 'moonlight_cart_items',
 };
 
+import { EDITED_PROMO_BANNERS } from '../data/defaultBanners';
+
 // ====================================================
-// 5 DEFAULT BANNER SLIDER IMAGES
+// 5 DEFAULT BANNER SLIDER IMAGES (EDITED PROMO BANNERS)
 // ====================================================
-export const DEFAULT_BANNERS: BannerItem[] = [
-  {
-    id: 'banner_1',
-    title: 'Artisanal Handcrafted Pizzas',
-    subtitle: '100% Real Mozzarella, Signature Herb Crust & Fresh Toppings',
-    tag: 'FLAT 10% OFF • CODE: MOONLIGHT10',
-    imageUrl: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1400&q=80',
-    categoryLink: 'pizza',
-    isActive: true,
-  },
-  {
-    id: 'banner_2',
-    title: 'Gourmet Loaded Burgers',
-    subtitle: 'Golden Grilled Patties, Cheddar Cheese & Creamy House Sauce',
-    tag: 'BESTSELLERS FROM ₹69',
-    imageUrl: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1400&q=80',
-    categoryLink: 'burger',
-    isActive: true,
-  },
-  {
-    id: 'banner_3',
-    title: 'Royal Dum Biryani',
-    subtitle: 'Slow-Cooked Aromatic Long-Grain Basmati Infused with Royal Spices',
-    tag: 'CHEF’S SPECIALTY',
-    imageUrl: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=1400&q=80',
-    categoryLink: 'biryani',
-    isActive: true,
-  },
-  {
-    id: 'banner_4',
-    title: 'Jumbo Grilled Sandwiches',
-    subtitle: 'Tri-Layer Toasted Bread Loaded with Cheese, Veggies & Spiced Chutney',
-    tag: 'FRESH & CRISPY',
-    imageUrl: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=1400&q=80',
-    categoryLink: 'jumbo-sandwich',
-    isActive: true,
-  },
-  {
-    id: 'banner_5',
-    title: 'Moonlight Super Combos',
-    subtitle: 'Pizza + Burger + Crispy Fries + Chilled Beverage at Unbeatable Value',
-    tag: 'SAVE UP TO 30%',
-    imageUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1400&q=80',
-    categoryLink: 'special-combo',
-    isActive: true,
-  },
-];
+export const DEFAULT_BANNERS: BannerItem[] = EDITED_PROMO_BANNERS;
 
 // ====================================================
 // BANNER SLIDER MANAGEMENT (EDITABLE FROM ADMIN)

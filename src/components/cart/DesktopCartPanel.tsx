@@ -13,6 +13,7 @@ import {
 import { useCart } from '../../context/CartContext';
 import { formatINR } from '../../lib/pricing';
 import { RESTAURANT_CONFIG } from '../../config/restaurant';
+import { FoodImage } from '../common/FoodImage';
 
 interface DesktopCartPanelProps {
   onOpenCheckout: () => void;
@@ -90,7 +91,7 @@ export const DesktopCartPanel: React.FC<DesktopCartPanelProps> = ({ onOpenChecko
         ) : (
           items.map(item => (
             <div key={item.id} className="p-3 rounded-xl bg-gray-800/80 border border-gray-700/60 flex items-center gap-3">
-              <img src={item.image} alt={item.name} className="w-11 h-11 rounded-lg object-cover bg-gray-700 shrink-0" />
+              <FoodImage src={item.image} alt={item.name} className="w-11 h-11 rounded-lg shrink-0" />
               <div className="flex-1 min-w-0">
                 <h4 className="text-xs font-bold text-gray-100 truncate">{item.name}</h4>
                 {item.selectedVariant && (
